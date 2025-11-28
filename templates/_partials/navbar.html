@@ -1,17 +1,47 @@
 <nav id="navbar">
 	<div class="container">
 		{% if let Some(user) = shared.current_user %}
-		<a href="/dashboard">
-			<h1 class="brand">{{ shared.app_info.name }}</h1>
+		<a class="flex items-center gap-1" href="/dashboard">
+			<svg
+				version="1.1"
+				xmlns="http://www.w3.org/2000/svg"
+				xmlns:xlink="http://www.w3.org/1999/xlink"
+				width="40"
+				height="26"
+				viewBox="0 0 94 80"
+				stroke="currentColor"
+				fill="currentColor"
+				aria-label="CT Map"
+			>
+				<path
+					d="M36.88 4.48l-21.6-0.96-3.12 44.96 2.72 4.64-10.88 6.4 3.36 5.6 2-1.040 0.8 0.8 2.56-1.36 0.32 0.48 0.8-1.6 1.36 0.080 5.68-3.6 2.64-1.36 1.52 0.48 1.44-1.76 0.56 0.32 2-1.36 0.96 1.12 1.28-0.56 3.2-2.48 1.84-0.4 4.32-5.12 0.24 1.76 0.88 1.12h3.44l2.88-0.56 2.24 0.64 1.28-0.8 2.56-0.64 2.8 1.12 0.88-0.32 0.56 0.64 2.4-1.76 3.76 0.56 0.96-0.72-0.8-0.56 0.56-1.28-1.84-2.48 2.16 1.040v2.16l2.56 1.6 2.8-1.68 1.2 0.64 0.4-1.6 3.68 0.88 1.12-2.48 2.080 2.080 3.2-1.52h3.52l1.12 0.56-0.64 0.96 1.36-0.48 0.64-4 1.040-1.36 0.4-6.4-0.64-29.76-42.32-0.16-0.080 1.28-1.84 0.16-0.24-1.44z"
+				></path>
+			</svg>
+			<h1 class="brand">Run</h1>
 		</a>
 		{% else %}
-		<a href="/">
-			<h1 class="brand">{{ shared.app_info.name }}</h1>
+		<a class="flex items-center gap-1" href="/">
+			<svg
+				version="1.1"
+				xmlns="http://www.w3.org/2000/svg"
+				xmlns:xlink="http://www.w3.org/1999/xlink"
+				width="40"
+				height="26"
+				viewBox="0 0 94 80"
+				stroke="currentColor"
+				fill="currentColor"
+				aria-label="CT Map"
+			>
+				<path
+					d="M36.88 4.48l-21.6-0.96-3.12 44.96 2.72 4.64-10.88 6.4 3.36 5.6 2-1.040 0.8 0.8 2.56-1.36 0.32 0.48 0.8-1.6 1.36 0.080 5.68-3.6 2.64-1.36 1.52 0.48 1.44-1.76 0.56 0.32 2-1.36 0.96 1.12 1.28-0.56 3.2-2.48 1.84-0.4 4.32-5.12 0.24 1.76 0.88 1.12h3.44l2.88-0.56 2.24 0.64 1.28-0.8 2.56-0.64 2.8 1.12 0.88-0.32 0.56 0.64 2.4-1.76 3.76 0.56 0.96-0.72-0.8-0.56 0.56-1.28-1.84-2.48 2.16 1.040v2.16l2.56 1.6 2.8-1.68 1.2 0.64 0.4-1.6 3.68 0.88 1.12-2.48 2.080 2.080 3.2-1.52h3.52l1.12 0.56-0.64 0.96 1.36-0.48 0.64-4 1.040-1.36 0.4-6.4-0.64-29.76-42.32-0.16-0.080 1.28-1.84 0.16-0.24-1.44z"
+				></path>
+			</svg>
+			<h1 class="brand">Run</h1>
 		</a>
 		{% endif %}
 		<ul>
-			<li><a href="/">Members</a></li>
-			<li><a href="/">Races</a></li>
+			<li class="desktop-only"><a href="/">Members</a></li>
+			<li class="desktop-only"><a href="/">Races</a></li>
 			<li>
 				<button class="btn" aria-label="enable dark mode">
 					<svg
@@ -54,6 +84,11 @@
 					</svg>
 				</button>
 			</li>
+			{% if let Some(user) = shared.current_user %}
+			<li>
+				<img class="avatar" style="margin-top: 4px" src="https://avatars.githubusercontent.com/u/104793781?v=4" alt="User Avatar" width="32" height="32" />
+			</li>
+			{% endif %}
 		</ul>
 	</div>
 </nav>
