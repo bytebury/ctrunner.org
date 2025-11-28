@@ -13,18 +13,6 @@ move fast &mdash; relying on Rust's speed to match on the
 server. It's how we built [Fun Banking](https://fun-banking.com),
 and continue to build more.
 
-## Some Background
-
-This is the template that we use at bytebury. Our primary stack is [Axum](https://github.com/tokio-rs/axum),
-[Askama](https://github.com/askama-rs/askama),
-[HTMX](https://github.com/bigskysoftware/htmx), and [SQLite](https://sqlite.org/)
-through [SQLx](https://github.com/launchbadge/sqlx). We run all of our servers
-on [DigitalOcean](https://www.digitalocean.com/) on
-various server sizes, so you'll notice some deployment workflows for
-DigitalOcean (feel free to change that to your liking).
-We use [Stripe](https://stripe.com) as our payment partner and
-[Google](https://google.com) for our OAuth (extensible).
-
 ## Getting Started
 
 > [!NOTE]
@@ -45,16 +33,6 @@ After that, you should be ready to start development.
 
 ```sh
 sqlx migrate add create_my_table
-```
-
-## Listen to Stripe Events
-
-You can use the Stripe CLI to listen to the webhooks locally. To do that,
-you'll need to download the Stripe CLI and then run the following
-command in a separate terminal:
-
-```sh
-stripe listen --forward-to localhost:8080/webhooks/stripe
 ```
 
 ## IP Services

@@ -1,6 +1,6 @@
 use crate::{
     SharedState,
-    domain::{Country, rbac::Role, user::UpdateUser},
+    domain::{User, rbac::Role, user::UpdateUser},
     util::htmx::HTMX,
 };
 
@@ -16,7 +16,6 @@ use reqwest::StatusCode;
 use serde::Deserialize;
 
 use crate::{
-    domain::user::AuditUser,
     extract::admin_user::AdminUser,
     routes::SharedContext,
     util::pagination::{PaginatedResponse, Pagination},
@@ -27,11 +26,6 @@ pub fn routes() -> Router<SharedState> {
         .route("/admin/users", get(users))
         .route("/admin/users/{id}", get(view_user))
         .route("/admin/users/{id}", patch(edit_user))
-        .route("/admin/countries", get(countries))
-        .route(
-            "/admin/countries/{id}/lock-or-unlock",
-            patch(lock_or_unlock_country),
-        )
 }
 
 #[derive(Deserialize)]
@@ -45,36 +39,19 @@ struct UserSearch {
 #[template(path = "admin/users.html")]
 struct AdminUsersTemplate {
     shared: SharedContext,
-    users: PaginatedResponse<AuditUser>,
+    users: PaginatedResponse<User>,
 }
 
 #[derive(Template, WebTemplate)]
 #[template(path = "admin/view_user.html")]
 struct AdminViewUserTemplate {
-    user: AuditUser,
+    user: User,
 }
 
 #[derive(Deserialize)]
 struct UpdateUserForm {
     locked: Option<String>,
     role: Role,
-}
-
-#[derive(Template, WebTemplate)]
-#[template(path = "admin/countries.html")]
-struct AdminCountriesTemplate {
-    shared: SharedContext,
-    countries: Vec<Country>,
-}
-
-#[derive(Deserialize)]
-struct UpdateCountryForm {
-    locked: Option<String>,
-}
-
-#[derive(Deserialize)]
-struct CountrySearchQuery {
-    q: Option<String>,
 }
 
 async fn users(
@@ -125,32 +102,4 @@ async fn edit_user(
         Ok(_) => HTMX::refresh().into_response(),
         Err(_) => StatusCode::NOT_FOUND.into_response(),
     }
-}
-
-async fn countries(
-    State(state): State<SharedState>,
-    AdminUser(user): AdminUser,
-    Query(params): Query<CountrySearchQuery>,
-) -> impl IntoResponse {
-    AdminCountriesTemplate {
-        countries: state
-            .country_service
-            .search(&params.q.unwrap_or_default())
-            .await,
-        shared: SharedContext::new(&state.app_info, Some(*user)),
-    }
-}
-
-async fn lock_or_unlock_country(
-    State(state): State<SharedState>,
-    AdminUser(_): AdminUser,
-    Path(id): Path<i64>,
-    Form(form): Form<UpdateCountryForm>,
-) -> impl IntoResponse {
-    let _ = match form.locked {
-        Some(_) => state.country_service.lock(id).await,
-        None => state.country_service.unlock(id).await,
-    };
-
-    StatusCode::ACCEPTED
 }

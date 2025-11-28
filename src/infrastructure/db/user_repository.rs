@@ -1,5 +1,5 @@
 use crate::domain::user::UpdateUser;
-use crate::domain::{User, user::AuditUser, user::NewUser};
+use crate::domain::{User, user::NewUser};
 use crate::util::pagination::{Paginatable, PaginatedResponse, Pagination};
 use sqlx::{SqlitePool, query, query_as};
 use std::sync::Arc;
@@ -12,7 +12,7 @@ impl UserRepository {
         Self { db: db.clone() }
     }
 
-    pub async fn find_by_id(&self, id: i64) -> Result<AuditUser, sqlx::Error> {
+    pub async fn find_by_id(&self, id: i64) -> Result<User, sqlx::Error> {
         query_as(r#"SELECT * FROM audit_users WHERE id = ?"#)
             .bind(id)
             .fetch_one(self.db.as_ref())
@@ -26,7 +26,7 @@ impl UserRepository {
             .await
     }
 
-    pub async fn update(&self, user: &UpdateUser) -> Result<AuditUser, sqlx::Error> {
+    pub async fn update(&self, user: &UpdateUser) -> Result<User, sqlx::Error> {
         let _ = query(r#"UPDATE users SET role = ?, locked = ? WHERE id = ?"#)
             .bind(&user.role)
             .bind(user.locked)
@@ -37,14 +37,10 @@ impl UserRepository {
         self.find_by_id(user.id).await
     }
 
-    pub async fn search(
-        &self,
-        pagination: &Pagination,
-        search: &str,
-    ) -> PaginatedResponse<AuditUser> {
+    pub async fn search(&self, pagination: &Pagination, search: &str) -> PaginatedResponse<User> {
         let pattern = &format!("%{}%", search.to_lowercase());
 
-        AuditUser::paginate_filter(
+        User::paginate_filter(
             &self.db,
             pagination,
             Some(r#"LOWER(full_name) LIKE ? OR LOWER(email) LIKE ? ORDER BY updated_at DESC"#),
@@ -58,9 +54,9 @@ impl UserRepository {
         query_as(
             r#"
         INSERT INTO users (
-            email, full_name, first_name, last_name, image_url, country_id, region_id, verified, locked
+            email, full_name, first_name, last_name, image_url, verified, locked
         )
-        VALUES (LOWER(?), LOWER(?), LOWER(?), LOWER(?), ?, ?, ?, ?, ?)
+        VALUES (LOWER(?), LOWER(?), LOWER(?), LOWER(?), ?, ?, ?)
         RETURNING *
         "#,
         )
@@ -69,8 +65,6 @@ impl UserRepository {
         .bind(&user.first_name)
         .bind(&user.last_name)
         .bind(&user.image_url)
-        .bind(user.country_id)
-        .bind(user.region_id)
         .bind(user.verified)
         .bind(user.locked)
         .fetch_one(self.db.as_ref())

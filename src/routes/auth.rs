@@ -11,13 +11,10 @@ use axum_extra::extract::{
 use log::error;
 use reqwest::StatusCode;
 use serde::Deserialize;
-use std::net::IpAddr;
 
 use crate::{
     SharedState,
-    extract::real_ip::RealIp,
     infrastructure::{
-        audit,
         auth::{OAuthProvider, google::GoogleOAuth},
         jwt::{JwtService, user_claims::UserClaims},
     },
@@ -43,21 +40,11 @@ async fn signin_with_google() -> impl IntoResponse {
 async fn google_callback(
     State(state): State<SharedState>,
     Query(params): Query<AuthRequest>,
-    RealIp(ip): RealIp,
     cookies: CookieJar,
 ) -> Result<impl IntoResponse, StatusCode> {
-    let mut user = GoogleOAuth::default()
+    let user = GoogleOAuth::default()
         .exchange_code_for_user(&params.code)
         .await?;
-
-    let ip: IpAddr = ip.parse().unwrap();
-    let country_details = audit::geolocation::get_country_details(ip).unwrap_or_default();
-
-    if let Ok(location) = state.country_service.create_or_get(&country_details).await {
-        user.country_id = Some(location.country.id);
-        user.region_id = Some(location.region.id);
-        user.locked = location.country.locked;
-    }
 
     let user = match state.user_service.find_by_email(&user.email).await {
         Ok(Some(user)) => user,
