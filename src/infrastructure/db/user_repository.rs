@@ -13,7 +13,7 @@ impl UserRepository {
     }
 
     pub async fn find_by_id(&self, id: i64) -> Result<User, sqlx::Error> {
-        query_as(r#"SELECT * FROM audit_users WHERE id = ?"#)
+        query_as(r#"SELECT * FROM users WHERE id = ?"#)
             .bind(id)
             .fetch_one(self.db.as_ref())
             .await
