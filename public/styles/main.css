@@ -7,7 +7,7 @@
 	--nav-bg: var(--background);
 	--nav-fg: var(--foreground);
 	--nav-hover-bg: #00000010;
-	--footer-bg: #fafafa;
+	--footer-bg: var(--background);
 	--footer-fg: #444;
 	--footer-border: 1px solid #00000020;
 	--card-bg: var(--background);
@@ -40,7 +40,7 @@
 	--nav-bg: var(--background);
 	--nav-fg: var(--foreground);
 	--nav-hover-bg: #ffffff15;
-	--footer-bg: #000;
+	--footer-bg: var(--background);
 	--footer-fg: #888;
 	--footer-border: 1px solid #00000020;
 	--card-bg: var(--background);
@@ -162,17 +162,6 @@ nav#navbar h1.brand {
 
 img {
 	flex-shrink: 0;
-}
-
-footer#footer {
-	margin-top: auto;
-	text-align: center;
-	width: 100%;
-	color: var(--footer-fg);
-	background: var(--footer-bg);
-	border-top: var(--footer-border);
-	font-size: 0.95rem;
-	padding: 8px 0;
 }
 
 .grid {
@@ -332,6 +321,15 @@ button.btn {
 	color: inherit;
 	border-radius: 4px;
 	text-decoration: none;
+}
+
+a.btn.signin {
+	border: 1px solid var(--default-border-color);
+	padding: 6px 24px;
+}
+
+a.btn.signin:hover {
+	background: var(--nav-hover-bg);
 }
 
 a.btn.info,

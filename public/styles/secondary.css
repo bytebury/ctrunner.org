@@ -181,6 +181,17 @@ img.avatar {
 	aspect-ratio: 1 / 1;
 }
 
+footer#footer {
+	margin-top: auto;
+	text-align: center;
+	width: 100%;
+	color: var(--footer-fg);
+	background: var(--footer-bg);
+	border-top: var(--footer-border);
+	font-size: 0.95rem;
+	padding: 8px 0;
+}
+
 @keyframes fadeIn {
 	0% {
 		opacity: 0;
