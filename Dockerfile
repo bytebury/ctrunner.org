@@ -22,22 +22,22 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y libsqlite3-0 ca-certificates libssl1.1 && apt-get clean
 
 # Copy compiled binary and assets
-COPY --from=builder /app/target/release/crust ./app
+COPY --from=builder /app/target/release/ctrunner ./app
 COPY --from=builder /app/templates ./templates
 COPY --from=builder /app/migrations ./migrations
 COPY --from=builder /app/public ./public
 
 # Rename files in public/styles and public/scripts
 RUN for dir in public/styles public/scripts; do \
-    if [ -d "$dir" ]; then \
-    for file in "$dir"/*; do \
-    [ -f "$file" ] || continue; \
-    filename=$(basename -- "$file"); \
-    name="${filename%.*}"; \
-    ext="${filename##*.}"; \
-    cp "$file" "$dir/$name.$RUN_ID.$ext"; \
-    done; \
-    fi; \
-    done
+	if [ -d "$dir" ]; then \
+	for file in "$dir"/*; do \
+	[ -f "$file" ] || continue; \
+	filename=$(basename -- "$file"); \
+	name="${filename%.*}"; \
+	ext="${filename##*.}"; \
+	cp "$file" "$dir/$name.$RUN_ID.$ext"; \
+	done; \
+	fi; \
+	done
 
 CMD ["./app"]
