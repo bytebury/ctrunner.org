@@ -67,8 +67,6 @@
 * {
 	box-sizing: border-box;
 	font-family: Georgia, "Times New Roman", Times, serif;
-	line-height: 1.5rem;
-	font-size: 1.05rem;
 }
 
 html,
@@ -81,6 +79,8 @@ body {
 	background-color: var(--background);
 	color: var(--foreground);
 	min-height: 100dvh;
+	line-height: 1.5rem;
+	font-size: 1.05rem;
 }
 
 h1 {
@@ -171,7 +171,7 @@ footer#footer {
 	color: var(--footer-fg);
 	background: var(--footer-bg);
 	border-top: var(--footer-border);
-	font-size: 0.9rem;
+	font-size: 0.95rem;
 	padding: 8px 0;
 }
 
@@ -186,7 +186,7 @@ footer#footer {
 }
 
 .flex {
-	display: flex;
+	display: flex !important;
 	flex-direction: row;
 	flex-wrap: wrap;
 	gap: var(--default-spacing);
@@ -201,7 +201,7 @@ footer#footer {
 }
 
 .flex-col {
-	display: flex;
+	display: flex !important;
 	flex-direction: column;
 	gap: var(--default-spacing);
 }
@@ -224,6 +224,10 @@ footer#footer {
 
 .items-center {
 	align-items: center;
+}
+
+.justify-center {
+	justify-content: center;
 }
 
 .text-center {
@@ -310,6 +314,7 @@ button.link {
 	border-radius: 4px;
 }
 
+a.btn,
 button {
 	display: inline-block;
 	border: 0;
@@ -320,19 +325,23 @@ button {
 	font-weight: 900;
 }
 
+a.btn,
 button.btn {
 	padding: 6px 10px;
 	transition: var(--transition);
 	color: inherit;
 	border-radius: 4px;
+	text-decoration: none;
 }
 
+a.btn.info,
 button.btn.info {
-	color: white;
+	color: white !important;
 	border-bottom: 4px solid var(--accent-color-border);
 	background: var(--accent-color);
 }
 
+a.btn.info-outlint,
 button.btn.info-outline {
 	border: 1px solid var(--accent-color-light);
 	color: var(--accent-color-light);
@@ -351,6 +360,7 @@ button.outline-hover:hover {
 	border: 1px solid var(--default-border-hover-color);
 }
 
+a.btn.info,
 button.info {
 	border: var(--pill-border);
 	background: var(--accent-color);
@@ -358,6 +368,7 @@ button.info {
 	border-bottom: 4px solid var(--accent-color-border);
 }
 
+a.btn.info:hover,
 button.info:hover {
 	background: var(--accent-color-border) !important;
 }
@@ -393,6 +404,10 @@ h2 {
 	display: block;
 }
 
+.mobile-only {
+	display: none;
+}
+
 .desktop-only.inline {
 	display: inline;
 }
@@ -406,5 +421,13 @@ h2 {
 	.desktop-only.inline,
 	.desktop-only {
 		display: none;
+	}
+
+	.mobile-only {
+		display: block;
+	}
+
+	.mobile-only.inline {
+		display: inline !important;
 	}
 }
