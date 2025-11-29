@@ -2,7 +2,8 @@
 	--foreground: #222;
 	--background: #fff;
 	--pro-color: #ffdbcf;
-	--admin-color: #e0ffc4;
+	--admin-color: #a3d0ff;
+	--royalty-color: #ffe1b0;
 	--nav-bg: var(--background);
 	--nav-fg: var(--foreground);
 	--nav-hover-bg: #00000010;
@@ -18,7 +19,7 @@
 	--accent-color-active: #0751cf;
 	--accent-color-border: #0541a8;
 	--link: var(--accent-color);
-	--muted: #444;
+	--muted: #555;
 	--default-spacing: 16px;
 	--default-border-color: #d1d1d1;
 	--default-border-hover-color: #777;
@@ -34,7 +35,8 @@
 	--foreground: #fff;
 	--background: #111216;
 	--pro-color: #ffdbcf;
-	--admin-color: #e0ffc4;
+	--admin-color: var(--accent-color);
+	--royalty-color: #b37519;
 	--nav-bg: var(--background);
 	--nav-fg: var(--foreground);
 	--nav-hover-bg: #ffffff15;
@@ -50,14 +52,14 @@
 	--accent-color-active: #0751cf20;
 	--accent-color-border: #0541a8;
 	--link: var(--accent-color-light);
-	--muted: #444;
+	--muted: #888;
 	--default-spacing: 16px;
 	--default-border-color: #ffffff15;
 	--default-border-hover-color: #777;
 	--default-border: 1px solid var(--default-border-color);
 	--underlay: #22222250;
 	--pill-border: 1px solid #00000020;
-	--table-row-hover: #00000010;
+	--table-row-hover: #00000020;
 	--transition:
 		background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
@@ -190,6 +192,14 @@ footer#footer {
 	gap: var(--default-spacing);
 }
 
+.nowrap {
+	white-space: nowrap;
+}
+
+.flex.nowrap {
+	flex-wrap: nowrap;
+}
+
 .flex-col {
 	display: flex;
 	flex-direction: column;
@@ -226,6 +236,11 @@ footer#footer {
 
 .text-right {
 	text-align: right;
+}
+
+.text-sm {
+	font-size: 0.9rem;
+	line-height: 1rem;
 }
 
 .muted {
@@ -275,6 +290,7 @@ select {
 	width: 100%;
 	background: var(--input-bg);
 	transition: var(--transition);
+	color: inherit;
 }
 
 select:focus,
@@ -317,6 +333,11 @@ button.btn.info {
 	background: var(--accent-color);
 }
 
+button.btn.info-outline {
+	border: 1px solid var(--accent-color-light);
+	color: var(--accent-color-light);
+}
+
 button.outline {
 	border: var(--default-border);
 }
@@ -338,11 +359,11 @@ button.info {
 }
 
 button.info:hover {
-	background: var(--accent-color-border);
+	background: var(--accent-color-border) !important;
 }
 
 .accent-color {
-	color: var(--accent-color-light);
+	color: var(--accent-color-light) !important;
 }
 
 .accent-color-bg {
@@ -372,12 +393,17 @@ h2 {
 	display: block;
 }
 
+.desktop-only.inline {
+	display: inline;
+}
+
 /* Mobile Style */
 @media (max-width: 768px) {
 	.grid.cols-2 {
 		grid-template-columns: repeat(1, 1fr);
 	}
 
+	.desktop-only.inline,
 	.desktop-only {
 		display: none;
 	}

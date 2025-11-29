@@ -7,6 +7,7 @@ use serde::{Deserialize, Serialize};
 pub enum Role {
     #[default]
     User,
+    Royalty,
     Admin,
 }
 

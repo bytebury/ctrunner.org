@@ -49,6 +49,7 @@ async fn initialize() -> Router {
         .merge(routes::homepage::routes())
         .merge(routes::auth::routes())
         .merge(routes::admin::routes())
+        .merge(routes::members::routes())
         .with_state(state)
         .layer(CompressionLayer::new())
 }

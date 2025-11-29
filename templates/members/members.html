@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="en">
 	<head>
-		<title>{{ shared.app_info.name }} | Control Panel</title>
-		<meta name="description" content="A template application." />
+		<title>{{ shared.app_info.name }} | Search Members</title>
+		<meta name="description" content="Search for members that are registered in CTRunner." />
 		<link rel="canonical" href="{{ shared.app_info.website_url }}" />
 		{% include "_partials/meta.html" %} {% include "_partials/scripts.html" %}
 	</head>
@@ -11,7 +11,7 @@
 		<main>
 			<div class="container">
 				<section class="card flex-col">
-					<h1>Manage Users</h1>
+					<h1>Search Members</h1>
 					<form>
 						<div class="form-control">
 							<label for="user_search">Search</label>
@@ -19,11 +19,11 @@
 								id="user_search"
 								name="q"
 								autocomplete="off"
-								placeholder="Search for user..."
+								placeholder="Search for runner..."
 								hx-select="#user_list"
 								hx-target="#user_list"
 								hx-trigger="keyup changed delay:200ms"
-								hx-get="/admin/users"
+								hx-get="/members"
 								type="text"
 							/>
 						</div>
@@ -40,7 +40,7 @@
 								</thead>
 								<tbody>
 									{% for user in users.items %}
-									<tr hx-get="/admin/users/{{ user.id }}" hx-target="#modal">
+									<tr>
 										<td>
 											<div class="flex nowrap items-center">
 												<div class="flex-col items-center gap-1">
@@ -60,19 +60,16 @@
 														{% if user.role == Role::Admin %}<span
 															class="pill admin"
 															>Admin</span
+														>{% elif user.role == Role::Royalty %}<span
+															class="pill royalty"
+															>Royalty</span
 														>{% endif %} {% if user.locked %}<span
 															class="pill"
-															>Locked</span
+															>Banned</span
 														>{% endif %}
 													</div>
 													<div>
-														Cheshire |
-														<span class="muted">#4343</span> |
-														<a
-															style="margin: 2px 0"
-															href="mailto:{{ user.email }}"
-															>{{ user.email }}</a
-														>
+														Cheshire <span class="muted">#4323</span>
 													</div>
 												</div>
 											</div>

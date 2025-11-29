@@ -82,10 +82,17 @@
 	font-size: 0.75rem;
 	border-radius: 5px;
 	border: var(--pill-border);
+	line-height: 0.75rem;
+	white-space: nowrap;
 }
 
 .pill.admin {
 	background: var(--admin-color);
+	color: var(--foreground);
+}
+
+.pill.royalty {
+	background: var(--royalty-color);
 	color: var(--foreground);
 }
 
@@ -128,7 +135,7 @@ table tbody tr:hover {
 table tbody tr td,
 table thead tr th {
 	text-align: left;
-	padding: 8px 4px;
+	padding: 8px 10px;
 }
 
 table tbody tr td {
@@ -140,7 +147,7 @@ table caption {
 	caption-side: bottom;
 	text-align: right;
 	font-size: 0.9rem;
-	color: #555;
+	color: var(--muted);
 }
 
 .card.news {

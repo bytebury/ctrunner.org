@@ -1,28 +1,37 @@
 <div id="app_drawer_underlay" style="display: none" onclick="closeAppDrawer()"></div>
 <section id="app_drawer" class="flex-col" style="transform: translateX(100%)">
 	<h1>Navigation</h1>
-	{% if let Some(user) = shared.current_user %}
 	<ul class="flex-col gap-2">
-		{% if user.role == Role::Admin %}
+		{% if let Some(user) = shared.current_user %} {% if user.role == Role::Admin %}
 		<li>
 			<a href="/admin/users">Manage Users</a>
 		</li>
 		{% endif %}
 		<li>
+			<a href="/members">Members</a>
+		</li>
+		<li>
+			<a href="/">Races</a>
+		</li>
+		<li>
+			<a href="/">My Profile</a>
+		</li>
+		<li>
+			<a href="/">Following</a>
+		</li>
+		<li>
 			<button class="link" hx-delete="/auth/signout" hx-swap="none">Sign out</button>
 		</li>
-	</ul>
-	{% else %}
-	<ul>
+		{% else %}
 		<li>
 			<a href="/auth/google">Login with Google</a>
 		</li>
 		<li>
-			<a href="/auth/google">Members</a>
+			<a href="/members">Members</a>
 		</li>
 		<li>
-			<a href="/auth/google">Races</a>
+			<a href="/">Races</a>
 		</li>
+		{% endif %}
 	</ul>
-	{% endif %}
 </section>
