@@ -14,6 +14,14 @@ pub mod admin_user;
 pub mod current_user;
 pub mod maybe_current_user;
 pub mod no_user;
+pub mod orphan_user;
+
+pub use admin_user::AdminUser;
+pub use current_user::CurrentUser;
+pub use maybe_current_user::MaybeCurrentUser;
+pub use no_user::NoUser;
+pub use orphan_user::OrphanUser;
+
 pub mod real_ip;
 
 #[derive(Clone)]

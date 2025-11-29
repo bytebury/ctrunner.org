@@ -1,11 +1,8 @@
-use std::sync::Arc;
-
-use sqlx::SqlitePool;
-
 use crate::{
+    DbConnection,
     domain::{
         User,
-        user::{NewUser, UpdateUser},
+        user::{NewUser, UpdateRunnerInfoForm, UpdateUser},
     },
     infrastructure::db::UserRepository,
     util::pagination::{PaginatedResponse, Pagination},
@@ -15,7 +12,7 @@ pub struct UserService {
     user_repository: UserRepository,
 }
 impl UserService {
-    pub fn new(db: &Arc<SqlitePool>) -> Self {
+    pub fn new(db: &DbConnection) -> Self {
         Self {
             user_repository: UserRepository::new(db),
         }
@@ -31,6 +28,16 @@ impl UserService {
 
     pub async fn update(&self, user: &UpdateUser) -> Result<User, sqlx::Error> {
         self.user_repository.update(user).await
+    }
+
+    pub async fn update_runner_info(
+        &self,
+        user_id: i64,
+        runner_info: &UpdateRunnerInfoForm,
+    ) -> Result<User, sqlx::Error> {
+        self.user_repository
+            .update_runner_info(user_id, runner_info)
+            .await
     }
 
     pub async fn search(&self, pagination: &Pagination, search: &str) -> PaginatedResponse<User> {

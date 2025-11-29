@@ -2,14 +2,17 @@ use axum::{
     Router,
     http::{HeaderValue, header::CACHE_CONTROL},
 };
-use sqlx::{Pool, Sqlite};
+use sqlx::SqlitePool;
 use std::{env, net::SocketAddr, sync::Arc};
 use tokio::net::TcpListener;
 use tower_http::{
     compression::CompressionLayer, services::ServeDir, set_header::SetResponseHeaderLayer,
 };
 
-use crate::{application::UserService, infrastructure::db::Database};
+use crate::{
+    application::{TownService, UserService},
+    infrastructure::db::Database,
+};
 
 pub mod application;
 pub mod domain;
@@ -50,6 +53,7 @@ async fn initialize() -> Router {
         .merge(routes::auth::routes())
         .merge(routes::admin::routes())
         .merge(routes::members::routes())
+        .merge(routes::submit_town::routes())
         .with_state(state)
         .layer(CompressionLayer::new())
 }
@@ -72,16 +76,19 @@ impl AppInfo {
 }
 
 type SharedState = Arc<AppState>;
+type DbConnection = Arc<SqlitePool>;
 
 pub struct AppState {
     pub app_info: AppInfo,
     pub user_service: UserService,
+    pub town_service: TownService,
 }
 impl AppState {
-    pub fn new(db: &Arc<Pool<Sqlite>>, app_info: AppInfo) -> Self {
+    pub fn new(db: &DbConnection, app_info: AppInfo) -> Self {
         Self {
             app_info: app_info.clone(),
             user_service: UserService::new(db),
+            town_service: TownService::new(db),
         }
     }
 }

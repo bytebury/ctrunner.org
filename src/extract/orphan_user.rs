@@ -4,9 +4,9 @@ use crate::extract::BaseUser;
 use axum::response::{IntoResponse, Redirect, Response};
 use axum::{extract::FromRequestParts, http::request::Parts};
 
-pub struct CurrentUser(pub Box<User>);
+pub struct OrphanUser(pub Box<User>);
 
-impl FromRequestParts<SharedState> for CurrentUser {
+impl FromRequestParts<SharedState> for OrphanUser {
     type Rejection = Response;
 
     async fn from_request_parts(
@@ -19,8 +19,8 @@ impl FromRequestParts<SharedState> for CurrentUser {
 
         match user {
             BaseUser::User(user) => match user.runner_id {
-                Some(_) => Ok(CurrentUser(user)),
-                None => Err(Redirect::to("/update-info").into_response()),
+                Some(_) => Err(Redirect::to("/dashboard").into_response()),
+                None => Ok(OrphanUser(user)),
             },
             _ => Err(Redirect::to("/").into_response()),
         }

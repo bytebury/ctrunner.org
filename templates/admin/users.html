@@ -60,14 +60,19 @@
 														{% if user.role == Role::Admin %}<span
 															class="pill admin"
 															>Admin</span
+														>
+														{% endif %} {% if user.role == Role::Royalty
+														%}<span class="pill royalty">Royalty</span
 														>{% endif %} {% if user.locked %}<span
 															class="pill"
 															>Locked</span
 														>{% endif %}
 													</div>
 													<div>
-														Cheshire |
-														<span class="muted">#4343</span> |
+														Cheshire {% if let Some(runner_id) =
+														user.runner_id %}
+														<span class="muted">#{{ runner_id }}</span>
+														{% endif %} |
 														<a
 															style="margin: 2px 0"
 															href="mailto:{{ user.email }}"

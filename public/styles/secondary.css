@@ -15,7 +15,7 @@
 	border-top-left-radius: 12px;
 	border-bottom-left-radius: 12px;
 	z-index: 50;
-	transition-duration: 300ms;
+	transition-duration: 200ms;
 	background: var(--drawer-bg);
 }
 
@@ -53,17 +53,49 @@
 }
 
 #modal_wrapper #modal {
-	margin: 32px var(--default-spacing);
+	margin: 8px var(--default-spacing);
 	width: calc(100% - var(--default-spacing));
-	max-width: 480px;
+	max-width: 668px;
 	overflow-x: hidden;
 	overflow-y: auto;
 	z-index: 1000;
 	max-height: calc(100% - 6rem);
 }
 
-#modal-content header {
-	margin-bottom: 8px;
+#modal form {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+#modal .form-actions {
+	display: flex;
+	align-items: stretch;
+	gap: 8px;
+}
+
+.form-actions button[type="submit"] {
+	padding: 4px 12px;
+	border-radius: 4px;
+	background: var(--accent-color);
+	border-bottom: 4px solid var(--accent-color-border);
+	color: white;
+}
+
+.form-actions button[type="submit"]:hover {
+	background: var(--accent-color-border);
+}
+
+.form-actions button[type="reset"] {
+	padding: 4px 12px;
+	border-radius: 4px;
+	background: none;
+	border: 1px solid var(--default-border-color);
+	color: var(--foreground);
+}
+
+.form-actions button[type="reset"]:hover {
+	background: var(--nav-hover-bg);
 }
 
 .line-clamp-2 {
@@ -128,7 +160,6 @@ table thead {
 }
 
 table tbody tr:hover {
-	transition: var(--transition);
 	background: var(--table-row-hover);
 }
 
@@ -179,6 +210,17 @@ table caption {
 img.avatar {
 	border-radius: 100%;
 	aspect-ratio: 1 / 1;
+}
+
+footer#footer {
+	margin-top: auto;
+	text-align: center;
+	width: 100%;
+	color: var(--footer-fg);
+	background: var(--footer-bg);
+	border-top: var(--footer-border);
+	font-size: 0.95rem;
+	padding: 8px 0;
 }
 
 @keyframes fadeIn {

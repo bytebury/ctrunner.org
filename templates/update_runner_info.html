@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<title>{{ shared.app_info.name }} | Update Runner Info</title>
+		<meta
+			name="description"
+			content="Update your Run169 information so that we can submit races on your behalf."
+		/>
+		{% include "_partials/meta.html" %} {% include "_partials/scripts.html" %}
+	</head>
+	<body>
+		{% include "_partials/navbar.html" %}
+		<main>
+			<div class="container">
+				<div class="flex-col card">
+					<div>
+						<h1>Welcome to {{ shared.app_info.name }}!</h1>
+						<p class="muted">
+							You'll need to be part of Run169. If you don't have a Run169 account,
+							you can
+							<a href="https://run169towns.org/join-us" target="_blank"
+								>create one here</a
+							>.
+						</p>
+					</div>
+					<div>
+						<h1>Run169 Information</h1>
+						<p class="muted">
+							You need to enter this information
+							<strong>exactly as it appears</strong> on your Run169 account.
+						</p>
+					</div>
+					<form
+						id="update_runner_form"
+						class="flex-col gap-2"
+						hx-patch="/update-info"
+						hx-select="#update_runner_form"
+					>
+						{% if let Some(form_error_message) = form_error_message %}
+						<div class="alert alert-error">{{ form_error_message }}</div>
+						{% endif %}
+						<div class="grid grid-cols-2 gap-2">
+							<div class="form-control">
+								<label for="first_name">First Name</label>
+								<input
+									id="first_name"
+									name="first_name"
+									type="text"
+									autocomplete="given-name"
+									required
+									value="{{ form.first_name }}"
+								/>
+							</div>
+							<div class="form-control">
+								<label for="last_name">Last Name</label>
+								<input
+									id="last_name"
+									name="last_name"
+									type="text"
+									autocomplete="family-name"
+									required
+									value="{{ form.last_name }}"
+								/>
+							</div>
+						</div>
+						<div class="form-control flex-col gap-2">
+							<label for="runner_id">Member ID</label>
+							<input
+								id="runner_id"
+								name="runner_id"
+								type="number"
+								inputmode="numeric"
+								autocomplete="off"
+								step="1"
+								min="1"
+								max="9999"
+								required
+							/>
+							<p class="text-sm">
+								Don't know it?
+								<a
+									href="https://app.powerbi.com/view?r=eyJrIjoiOTIzZTA2ODMtOGUwMC00YmQxLTkxMDUtNjBhMjI1M2EyMDdiIiwidCI6IjA5ODlmZDI4LTE0NDgtNGYyYi1iZTExLTA5NmE3OTRjZDUwZCIsImMiOjF9&pageName=ReportSection4ea470777fe23c5dd854"
+									target="_blank"
+									>You can look it up here</a
+								>.
+							</p>
+						</div>
+						<div class="form-control">
+							<label for="hometown_id">Town Name</label>
+							<select id="hometown_id" name="hometown_id">
+								<option value="" selected disabled>Please Select...</option>
+								{% for town in towns %}
+								<option value="{{ town.id }}">{{ town.display_name }}</option>
+								{% endfor %}
+							</select>
+						</div>
+						<div class="form-actions" style="margin-top: 16px">
+							<button form="update_runner_form" type="submit">
+								Save Information
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</main>
+		{% include "_partials/footer.html" %}
+	</body>
+</html>

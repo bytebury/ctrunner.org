@@ -52,13 +52,19 @@
 		<ul>
 			<li class="desktop-only"><a href="/members">Members</a></li>
 			<li class="desktop-only"><a href="/">Races</a></li>
-			{% if let Some(user) = shared.current_user %}
+			{% if let Some(user) = shared.current_user %} {% if let Some(runner_id) = user.runner_id
+			%}
 			<li>
-				<button class="accent-color btn info-outline" style="padding: 4px 8px">
+				<button
+					class="accent-color btn info-outline"
+					style="padding: 4px 8px"
+					hx-get="/submit-town"
+					hx-target="#modal"
+				>
 					<strong>Submit&nbsp;Town</strong>
 				</button>
 			</li>
-			{% else %}
+			{% endif %} {% else %}
 			<li style="margin-right: -2px">
 				<button
 					class="btn"

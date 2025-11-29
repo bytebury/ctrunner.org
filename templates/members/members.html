@@ -60,16 +60,21 @@
 														{% if user.role == Role::Admin %}<span
 															class="pill admin"
 															>Admin</span
-														>{% elif user.role == Role::Royalty %}<span
-															class="pill royalty"
-															>Royalty</span
+														>
+														{% endif %} {% if user.role == Role::Royalty
+														%}<span class="pill royalty">Royalty</span
 														>{% endif %} {% if user.locked %}<span
 															class="pill"
 															>Banned</span
 														>{% endif %}
 													</div>
 													<div>
-														Cheshire <span class="muted">#4323</span>
+														{% if let Some(hometown_id) =
+														user.hometown_id %} {{ hometown_id }} {%
+														endif %} {% if let Some(runner_id) =
+														user.runner_id %}
+														<span class="muted">#{{ runner_id }}</span>
+														{% endif %}
 													</div>
 												</div>
 											</div>

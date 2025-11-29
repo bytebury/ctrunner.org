@@ -4,7 +4,9 @@ pub mod admin;
 pub mod auth;
 pub mod homepage;
 pub mod members;
+pub mod submit_town;
 
+#[derive(Default)]
 pub struct SharedContext {
     pub app_info: AppInfo,
     pub current_user: Option<User>,
