@@ -1,4 +1,5 @@
-use crate::domain::User;
+use crate::domain::distance::Miles;
+use crate::domain::{User, distance::DistanceUnit};
 use chrono::{Datelike, NaiveDate};
 use serde::{Deserialize, Serialize};
 use sqlx::FromRow;
@@ -27,18 +28,25 @@ impl fmt::Display for Town {
     }
 }
 
-#[derive(Debug, Serialize, Deserialize, Default)]
+#[derive(Serialize, Deserialize, Default)]
 pub struct SubmitTown {
-    town_id: i64,
-    race_id: i64,
-    distance_val: f64,
-    distance_unit: String,
-    race_date: NaiveDate,
-    notes: String,
+    pub town_id: i64,
+    pub race_id: i64,
+    pub distance_val: f64,
+    pub distance_unit: DistanceUnit,
+    pub race_date: NaiveDate,
+    pub notes: String,
 }
 
-#[derive(Debug, Clone)]
-pub struct SubmitTownFormIds {
+pub struct SubmitTownForGoogle {
+    pub town_name: String,
+    pub race_name: String,
+    pub distance_val: Miles,
+    pub race_date: NaiveDate,
+    pub notes: String,
+}
+
+pub struct SubmitTownGoogleForm {
     form_id: String,
     member_id: String,
     action: String,
@@ -56,7 +64,7 @@ pub struct SubmitTownFormIds {
     answers: HashMap<String, String>,
 }
 
-impl SubmitTownFormIds {
+impl SubmitTownGoogleForm {
     pub fn new() -> Self {
         Self {
             form_id: "1FAIpQLScHViJvQL0G_ZPuCZOIFNsBPthZwDSzbkgiFFeL93wp831diA".to_string(),
@@ -77,7 +85,11 @@ impl SubmitTownFormIds {
         }
     }
 
-    pub fn add_answers(mut self, user: User, form: SubmitTown) -> CompletedSubmitTownForm {
+    pub fn add_answers(
+        mut self,
+        user: User,
+        form: SubmitTownForGoogle,
+    ) -> CompletedSubmitTownGoogleForm {
         self.answers.insert(
             format!("entry.{}", self.member_id),
             user.runner_id.unwrap().to_string(),
@@ -89,7 +101,7 @@ impl SubmitTownFormIds {
         self.answers
             .insert(format!("entry.{}", self.last_name), user.last_name);
         self.answers
-            .insert(format!("entry.{}", self.town_of_race), "Andover".into());
+            .insert(format!("entry.{}", self.town_of_race), form.town_name);
         self.answers.insert(
             format!("entry.{}", self.date_of_race_year),
             form.race_date.year().to_string(),
@@ -104,10 +116,10 @@ impl SubmitTownFormIds {
         );
         self.answers.insert(
             format!("entry.{}", self.distance),
-            form.distance_val.to_string(),
-        ); // TODO: need to convert KM to Miles
+            form.distance_val.value().to_string(),
+        );
         self.answers
-            .insert(format!("entry.{}", self.name_of_race), "Sample Race".into());
+            .insert(format!("entry.{}", self.name_of_race), form.race_name);
         self.answers
             .insert(format!("entry.{}", self.is_169th_town), "No".into());
         self.answers
@@ -115,21 +127,24 @@ impl SubmitTownFormIds {
         self.answers
             .insert(format!("entry.{}", self.comment), form.notes);
 
-        CompletedSubmitTownForm(self)
+        CompletedSubmitTownGoogleForm(self)
     }
 }
 
-#[derive(Debug)]
-pub struct CompletedSubmitTownForm(SubmitTownFormIds);
+pub struct CompletedSubmitTownGoogleForm(SubmitTownGoogleForm);
 
-impl CompletedSubmitTownForm {
-    pub async fn submit(&self) -> Result<(), reqwest::Error> {
+impl CompletedSubmitTownGoogleForm {
+    pub async fn submit(&self) -> Result<(), String> {
         let base_url = "https://docs.google.com/forms/d/e";
         let url = format!("{}/{}/formResponse", base_url, self.0.form_id);
         let client = reqwest::Client::new();
-        dbg!(&self.0);
-        let response = client.post(&url).form(&self.0.answers).send().await?;
-        response.error_for_status()?;
+        let response = client
+            .post(&url)
+            .form(&self.0.answers)
+            .send()
+            .await
+            .map_err(|e| e.to_string())?;
+        response.error_for_status().map_err(|e| e.to_string())?;
         Ok(())
     }
 }

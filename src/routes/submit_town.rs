@@ -1,9 +1,6 @@
 use crate::{
     SharedState,
-    domain::{
-        Town,
-        town::{SubmitTown, SubmitTownFormIds},
-    },
+    domain::{Town, distance::DistanceUnit, town::SubmitTown},
     extract::current_user::CurrentUser,
 };
 
@@ -27,7 +24,7 @@ pub fn routes() -> Router<SharedState> {
 #[derive(Template, WebTemplate, Default)]
 #[template(path = "submit_town.html")]
 struct SubmitTownPage {
-    form: SubmitTown,
+    _form: SubmitTown,
     towns: Vec<Town>,
     max_race_date: NaiveDate,
 }
@@ -48,19 +45,15 @@ async fn submit_town(
     CurrentUser(user): CurrentUser,
     Form(form): Form<SubmitTown>,
 ) -> impl IntoResponse {
-    match SubmitTownFormIds::new()
-        .add_answers(*user, form)
-        .submit()
-        .await
-        .inspect_err(|e| println!("{e}"))
-    {
+    // TODO: We'll need to handle the error scenario and success scenario.
+    //       We should celebrate the user's achievement!
+    match state.town_service.submit_completed_town(*user, form).await {
         Ok(_) => SubmitTownPage {
             towns: state.town_service.find_all().await,
             max_race_date: Utc::now().with_timezone(&New_York).date_naive(),
             ..Default::default()
         }
         .into_response(),
-        // TODO: Need to add error message when something goes wrong.
         Err(_) => SubmitTownPage {
             towns: state.town_service.find_all().await,
             max_race_date: Utc::now().with_timezone(&New_York).date_naive(),

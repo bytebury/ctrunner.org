@@ -1,3 +1,4 @@
+pub mod distance;
 pub mod rbac;
 pub mod town;
 pub mod user;

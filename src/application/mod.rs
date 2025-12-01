@@ -1,4 +1,3 @@
-pub mod run169_service;
 pub mod town_service;
 pub mod user_service;
 
