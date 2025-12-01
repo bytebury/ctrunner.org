@@ -84,6 +84,7 @@ pub struct UserView {
     pub hometown: Option<String>,
     pub hometown_county_id: Option<i64>,
     pub hometown_county: Option<String>,
+    pub completed_towns_count: i64,
     pub email: String,
     pub verified: bool,
     pub first_name: String,

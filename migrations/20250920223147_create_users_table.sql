@@ -29,6 +29,15 @@ END;
 
 -- User View
 CREATE VIEW users_view AS
-SELECT u.*, t.name AS hometown, t.county_id AS hometown_county_id, t.county AS hometown_county
+SELECT
+	u.*,
+	t.name AS hometown,
+	t.county_id AS hometown_county_id,
+	t.county AS hometown_county,
+	(
+		SELECT COUNT(*)
+		FROM completed_towns ct
+		WHERE ct.user_id = u.id
+	) AS completed_towns_count
 FROM users u
 LEFT JOIN towns_view t ON u.hometown_id = t.id;
