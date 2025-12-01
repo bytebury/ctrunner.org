@@ -80,12 +80,7 @@ body {
 	color: var(--foreground);
 	min-height: 100dvh;
 	line-height: 1.5rem;
-	font-size: 1.05rem;
-}
-
-h1 {
-	font-size: 1.5rem;
-	font-weight: 500;
+	font-size: 1rem;
 }
 
 .container {
@@ -326,6 +321,7 @@ button.btn {
 
 a.btn.signin {
 	border: 1px solid var(--default-border-color);
+	border-bottom: 4px solid var(--default-border-color);
 	padding: 6px 24px;
 }
 
@@ -340,7 +336,7 @@ button.btn.info {
 	background: var(--accent-color);
 }
 
-a.btn.info-outlint,
+a.btn.info-outline,
 button.btn.info-outline {
 	border: 1px solid var(--accent-color-light);
 	color: var(--accent-color-light);
@@ -389,8 +385,9 @@ h3 {
 }
 
 h1 {
-	font-size: 1.75rem;
-	line-height: 2.15rem;
+	font-size: 1.5rem;
+	line-height: 1.9rem;
+	font-weight: 500;
 }
 
 h2 {

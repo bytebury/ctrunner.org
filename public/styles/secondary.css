@@ -75,7 +75,7 @@
 }
 
 .form-actions button[type="submit"] {
-	padding: 4px 12px;
+	padding: 6px 12px;
 	border-radius: 4px;
 	background: var(--accent-color);
 	border-bottom: 4px solid var(--accent-color-border);
@@ -87,10 +87,11 @@
 }
 
 .form-actions button[type="reset"] {
-	padding: 4px 12px;
+	padding: 6px 12px;
 	border-radius: 4px;
 	background: none;
 	border: 1px solid var(--default-border-color);
+	border-bottom: 4px solid var(--default-border-color);
 	color: var(--foreground);
 }
 
@@ -186,6 +187,7 @@ table caption {
 	padding: 6px;
 	position: relative;
 	overflow: hidden;
+	font-size: 0.9rem;
 }
 
 .card.news span:first-of-type {

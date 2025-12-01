@@ -16,18 +16,11 @@
 					<div>
 						<h1>Welcome to {{ shared.app_info.name }}!</h1>
 						<p class="muted">
-							You'll need to be part of Run169. If you don't have a Run169 account,
-							you can
+							Please enter the information exactly as it appears on your Run169
+							account. Don't have an account?
 							<a href="https://run169towns.org/join-us" target="_blank"
-								>create one here</a
+								>Create one here</a
 							>.
-						</p>
-					</div>
-					<div>
-						<h1>Run169 Information</h1>
-						<p class="muted">
-							You need to enter this information
-							<strong>exactly as it appears</strong> on your Run169 account.
 						</p>
 					</div>
 					<form
@@ -88,8 +81,8 @@
 							</p>
 						</div>
 						<div class="form-control">
-							<label for="hometown_id">Town Name</label>
-							<select id="hometown_id" name="hometown_id">
+							<label for="hometown_id">Hometown</label>
+							<select id="hometown_id" name="hometown_id" required>
 								<option value="" selected disabled>Please Select...</option>
 								{% for town in towns %}
 								<option value="{{ town.id }}">{{ town.display_name }}</option>

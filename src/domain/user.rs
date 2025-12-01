@@ -105,12 +105,14 @@ pub struct UpdateRunnerInfo {
     pub runner_id: i64,
     pub first_name: String,
     pub last_name: String,
-    pub hometown_id: Option<i64>,
+    pub hometown_id: i64,
 }
 
 impl Validate for UpdateRunnerInfo {
     fn validate(&self) -> Result<(), String> {
-        RunnerId::parse(self.runner_id)?;
+        if !(1..10_000).contains(&self.runner_id) {
+            return Err("Member ID is not valid".to_string());
+        }
 
         if self.first_name.is_whitespace_or_empty() {
             return Err("First name cannot be empty".to_string());
@@ -128,26 +130,10 @@ impl Validate for UpdateRunnerInfo {
             return Err("Last name cannot be longer than 25 characters".to_string());
         }
 
-        if self.hometown_id.is_some_and(Town::is_not_valid) {
+        if Town::is_not_valid(self.hometown_id) {
             return Err("Town is not valid".to_string());
         }
 
         Ok(())
-    }
-}
-
-#[derive(Debug, PartialEq, Eq, Clone)]
-pub struct RunnerId(i64);
-
-impl RunnerId {
-    pub fn value(&self) -> i64 {
-        self.0
-    }
-
-    fn parse(id: i64) -> Result<i64, String> {
-        if (1..10_000).contains(&id) {
-            return Ok(id);
-        }
-        Err("Invalid Member ID".to_string())
     }
 }

@@ -65,7 +65,7 @@ impl UserRepository {
         UserView::paginate_filter(
             &self.db,
             pagination,
-            Some(r#"LOWER(full_name) LIKE ? OR LOWER(email) LIKE ? ORDER BY updated_at DESC"#),
+            Some(r#"(LOWER(full_name) LIKE ? OR LOWER(email) LIKE ?) AND runner_id IS NOT NULL ORDER BY updated_at DESC"#),
             vec![pattern, pattern],
         )
         .await

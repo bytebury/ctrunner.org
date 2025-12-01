@@ -1,10 +1,7 @@
 <header>
 	<h1>Submit a Town</h1>
-	<p class="muted">
-		Congratulations on finishing another race! We'll let the official site know.
-	</p>
 </header>
-<form id="submit_town_form" hx-put="/submit-town" hx-select="#submit_town_form">
+<form id="submit_town_form" hx-put="/submit" hx-select="#submit_town_form">
 	<div class="form-control">
 		<label for="town_id">Town Name</label>
 		<select id="town_id" name="town_id" required>
