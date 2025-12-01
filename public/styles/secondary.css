@@ -124,9 +124,8 @@
 	color: var(--foreground);
 }
 
-.pill.royalty {
-	background: var(--royalty-color);
-	color: var(--foreground);
+.text-royalty {
+	color: var(--royalty-color);
 }
 
 .pill.pro {

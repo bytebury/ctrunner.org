@@ -3,7 +3,7 @@
 	--background: #fff;
 	--pro-color: #ffdbcf;
 	--admin-color: #a3d0ff;
-	--royalty-color: #ffe1b0;
+	--royalty-color: #ff9200;
 	--nav-bg: var(--background);
 	--nav-fg: var(--foreground);
 	--nav-hover-bg: #00000010;
@@ -36,7 +36,7 @@
 	--background: #111216;
 	--pro-color: #ffdbcf;
 	--admin-color: var(--accent-color);
-	--royalty-color: #b37519;
+	--royalty-color: #ff9200;
 	--nav-bg: var(--background);
 	--nav-fg: var(--foreground);
 	--nav-hover-bg: #ffffff15;

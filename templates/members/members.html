@@ -62,8 +62,31 @@
 															>Admin</span
 														>
 														{% endif %} {% if user.role == Role::Royalty
-														%}<span class="pill royalty">Royalty</span
-														>{% endif %} {% if user.locked %}<span
+														%}
+														<svg
+															width="16"
+															height="12"
+															class="text-royalty"
+															viewBox="0 0 16.00281 11.98315"
+															fill="currentColor"
+															aria-label="Royalty"
+														>
+															<g
+																transform="translate(-56.129481,-77.742796)"
+															>
+																<g
+																	transform="translate(-45.423889,-39.358324)"
+																>
+																	<path
+																		d="m 109.41135,117.10112 -3.42118,4.51264 -4.4368,-2.99578 1.02388,7.09129 h 13.99297 l 0.98596,-7.12922 -4.39888,3.14748 z"
+																	/>
+																	<path
+																		d="m 102.69101,126.96067 0.0379,2.1236 h 13.61377 v -2.16152 z"
+																	/>
+																</g>
+															</g>
+														</svg>
+														{% endif %} {% if user.locked %}<span
 															class="pill"
 															>Banned</span
 														>{% endif %}
