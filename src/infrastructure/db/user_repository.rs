@@ -27,14 +27,12 @@ impl UserRepository {
     }
 
     pub async fn update(&self, user: &UpdateUser) -> Result<UserView, sqlx::Error> {
-        let _ = query(
-            r#"UPDATE users SET role = ?, locked = ?, updated_at = current_timestamp WHERE id = ?"#,
-        )
-        .bind(&user.role)
-        .bind(user.locked)
-        .bind(user.id)
-        .execute(self.db.as_ref())
-        .await?;
+        let _ = query(r#"UPDATE users SET role = ?, locked = ? WHERE id = ?"#)
+            .bind(&user.role)
+            .bind(user.locked)
+            .bind(user.id)
+            .execute(self.db.as_ref())
+            .await?;
 
         self.find_by_id(user.id).await
     }
@@ -44,7 +42,7 @@ impl UserRepository {
         user_id: i64,
         user: &UpdateRunnerInfo,
     ) -> Result<User, sqlx::Error> {
-        query_as(r#"UPDATE users SET first_name = ?, last_name = ?, runner_id = ?, hometown_id = ?, full_name = ?, updated_at = current_timestamp WHERE id = ? RETURNING *"#)
+        query_as(r#"UPDATE users SET first_name = ?, last_name = ?, runner_id = ?, hometown_id = ?, full_name = ? WHERE id = ? RETURNING *"#)
             .bind(&user.first_name)
             .bind(&user.last_name)
             .bind(&user.runner_id)
@@ -65,7 +63,7 @@ impl UserRepository {
         UserView::paginate_filter(
             &self.db,
             pagination,
-            Some(r#"(LOWER(full_name) LIKE ? OR LOWER(email) LIKE ?) AND runner_id IS NOT NULL ORDER BY updated_at DESC"#),
+            Some(r#"(LOWER(full_name) LIKE ? OR LOWER(email) LIKE ?) AND runner_id IS NOT NULL ORDER BY full_name ASC"#),
             vec![pattern, pattern],
         )
         .await

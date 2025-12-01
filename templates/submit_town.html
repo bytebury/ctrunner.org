@@ -7,7 +7,7 @@
 		<select id="town_id" name="town_id" required>
 			<option value="" selected disabled>Please Select...</option>
 			{% for town in towns %}
-			<option value="{{ town.id }}">{{ town.display_name }}</option>
+			<option value="{{ town.id }}">{{ town.name }}</option>
 			{% endfor %}
 		</select>
 	</div>

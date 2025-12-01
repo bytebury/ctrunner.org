@@ -46,6 +46,9 @@ jobs:
 
             cd ~/ctrunner
 
+            mkdir -p db
+            touch db/database.db
+
             docker run -d \
                 -p 8083:8080 \
                 -v $(pwd)/db:/app/db \

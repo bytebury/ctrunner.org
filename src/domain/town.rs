@@ -9,7 +9,8 @@ use std::{collections::HashMap, fmt};
 pub struct Town {
     pub id: i64,
     pub name: String,
-    pub display_name: String,
+    pub county_id: i64,
+    pub county: String,
 }
 
 impl Town {
@@ -24,7 +25,7 @@ impl Town {
 
 impl fmt::Display for Town {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.display_name)
+        write!(f, "{}", self.name)
     }
 }
 

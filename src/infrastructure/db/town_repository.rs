@@ -12,7 +12,7 @@ impl TownRepository {
     }
 
     pub async fn find_all(&self) -> Vec<Town> {
-        query_as("SELECT * FROM towns ORDER BY name ASC")
+        query_as("SELECT * FROM towns_view ORDER BY name ASC")
             .fetch_all(self.db.as_ref())
             .await
             .unwrap_or(vec![])

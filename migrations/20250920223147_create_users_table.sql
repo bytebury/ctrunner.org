@@ -17,9 +17,18 @@ CREATE TABLE users (
 CREATE INDEX idx_users_email ON users(email);
 CREATE INDEX idx_users_runner_id ON users(runner_id);
 
+-- Update updated at when there are changes
+CREATE TRIGGER set_users_updated_at
+AFTER UPDATE ON users
+FOR EACH ROW
+BEGIN
+    UPDATE users
+    SET updated_at = CURRENT_TIMESTAMP
+    WHERE id = NEW.id;
+END;
+
+-- User View
 CREATE VIEW users_view AS
-SELECT
-	user.*,
-	town.display_name AS hometown
-FROM users user
-LEFT JOIN towns town ON user.hometown_id = town.id;
+SELECT u.*, t.name AS hometown, t.county_id AS hometown_county_id, t.county AS hometown_county
+FROM users u
+LEFT JOIN towns_view t ON u.hometown_id = t.id;
