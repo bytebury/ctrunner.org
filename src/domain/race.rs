@@ -17,7 +17,6 @@ pub struct Race {
     pub town_id: i64,
     pub name: String,
     pub miles: f64,
-    pub street_address: Option<String>,
     pub race_url: Option<String>,
     pub start_at: chrono::NaiveDateTime,
     pub created_at: chrono::NaiveDateTime,
@@ -32,7 +31,6 @@ pub struct RaceView {
     pub town: String,
     pub county: String,
     pub miles: f64,
-    pub street_address: Option<String>,
     pub race_url: Option<String>,
     pub start_at: chrono::NaiveDateTime,
     pub created_at: chrono::NaiveDateTime,
@@ -76,7 +74,6 @@ pub struct NewRaceForm {
     pub distance_unit: DistanceUnit,
     #[serde(deserialize_with = "parse_no_seconds")]
     pub start_at: NaiveDateTime,
-    pub street_address: String,
     pub race_url: String,
 }
 
@@ -85,7 +82,6 @@ pub struct NewRace {
     pub town_id: i64,
     pub miles: Miles,
     pub start_at: chrono::NaiveDateTime,
-    pub street_address: Option<String>,
     pub race_url: Option<String>,
 }
 
@@ -116,7 +112,6 @@ impl From<SubmitTown> for NewRace {
             town_id: form.town_id,
             miles,
             start_at: form.start_at,
-            street_address: None,
             race_url: None,
         }
     }
@@ -133,7 +128,6 @@ impl From<NewRaceForm> for NewRace {
             town_id: form.town_id,
             miles,
             start_at: form.start_at,
-            street_address: Some(form.street_address),
             race_url: Some(form.race_url),
         }
     }

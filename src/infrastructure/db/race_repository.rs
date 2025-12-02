@@ -28,8 +28,8 @@ impl RaceRepository {
     pub async fn get_or_create(&self, race: NewRace) -> Result<RaceView, String> {
         let race_id: i64 = sqlx::query_scalar(
             r#"
-       		INSERT INTO races (town_id, name, miles, start_at, street_address, race_url)
-            VALUES (?, LOWER(?), ?, ?, ?, ?)
+       		INSERT INTO races (town_id, name, miles, start_at, race_url)
+            VALUES (?, LOWER(?), ?, ?, ?)
             ON CONFLICT(town_id, name, miles, start_at)
             DO UPDATE SET name = name
             RETURNING id
@@ -39,7 +39,6 @@ impl RaceRepository {
         .bind(race.name)
         .bind(race.miles.value())
         .bind(race.start_at)
-        .bind(race.street_address)
         .bind(race.race_url)
         .fetch_one(self.db.as_ref())
         .await

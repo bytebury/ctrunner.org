@@ -4,7 +4,6 @@ CREATE TABLE races (
     name TEXT NOT NULL,
     miles REAL NOT NULL,
     start_at DATETIME NOT NULL,
-    street_address TEXT,
     race_url TEXT,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
