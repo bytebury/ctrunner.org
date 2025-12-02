@@ -1,9 +1,11 @@
 use log::info;
 use sqlx::{Connection, SqlitePool, migrate::Migrator, sqlite::SqlitePoolOptions};
 
+pub mod race_repository;
 pub mod town_repository;
 pub mod user_repository;
 
+pub use race_repository::RaceRepository;
 pub use town_repository::TownRepository;
 pub use user_repository::UserRepository;
 

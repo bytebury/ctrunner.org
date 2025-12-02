@@ -1,0 +1,68 @@
+<header>
+	<h1>Submit a Town</h1>
+</header>
+<form id="submit_town_form" hx-put="/submit-town" hx-select="#submit_town_form">
+	<div class="form-control">
+		<label for="town_id">Town Name</label>
+		<select id="town_id" name="town_id" required onchange="enableRaceSearch()">
+			<option value="" selected disabled>Please Select...</option>
+			{% for town in towns %}
+			<option value="{{ town.id }}">{{ town.name }}</option>
+			{% endfor %}
+		</select>
+	</div>
+	<div id="secondary_questions" class="hidden gap-2">
+		<div class="form-control">
+			<label for="race_name">Race Name</label>
+			<input
+				id="race_name"
+				name="race_name"
+				type="text"
+				hx-trigger="keyup changed, focus"
+				hx-get="/submit-town/search"
+				hx-target="#results"
+				hx-include="#town_id"
+				autocomplete="off"
+				required
+			/>
+			<input id="race_id" name="race_id" type="hidden" value="0" />
+			<div id="results"></div>
+		</div>
+	</div>
+	<div id="tertiary_questions" class="hidden gap-2">
+		<div class="grid" style="grid-template-columns: 1fr 1fr">
+			<div class="form-control">
+				<label for="distance_val">Distance</label>
+				<input
+					type="number"
+					id="distance_val"
+					name="distance_val"
+					inputmode="decimal"
+					min="0"
+					step="0.001"
+					autocomplete="off"
+					required
+				/>
+			</div>
+			<div class="form-control">
+				<label for="distance_unit">Unit</label>
+				<select id="distance_unit" name="distance_unit" required>
+					<option value="{{ DistanceUnit::Kilometers }}">Kilometers</option>
+					<option value="{{ DistanceUnit::Miles }}" selected>Miles</option>
+				</select>
+			</div>
+		</div>
+		<div class="form-control">
+			<label for="race_date">Date of the Race</label>
+			<input type="date" id="race_date" name="race_date" max="{{ max_race_date }}" required />
+		</div>
+	</div>
+	<div class="form-control">
+		<label for="notes">Notes</label>
+		<textarea id="notes" name="notes" placeholder="This field is optional..."></textarea>
+	</div>
+</form>
+<div class="form-actions">
+	<button form="submit_town_form" type="submit">Submit Town</button>
+	<button type="reset" onclick="closeModal()">Close</button>
+</div>

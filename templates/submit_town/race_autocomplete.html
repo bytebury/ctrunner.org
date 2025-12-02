@@ -1,0 +1,27 @@
+<div id="results" class="relative" hx-swap-oob="true">
+	<ol class="dropdown absolute">
+		{% for race in races.items %}
+		<li>
+			<button
+				type="button"
+				class="text-left"
+				onclick='selectRace(JSON.parse(`{{ race | tojson | safe }}`))'
+			>
+				<div>
+					<strong>{{ race.name }} ({{ race.miles }} miles)</strong>
+					on {{ race.start_date | date }}
+				</div>
+			</button>
+		</li>
+		{% endfor %}
+		<li>
+			<button
+				type="button"
+				class="text-left"
+				onclick="noRace()"
+			>
+				My race isn't here...
+			</button>
+		</li>
+	</ol>
+</div>

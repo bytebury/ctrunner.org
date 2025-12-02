@@ -224,6 +224,38 @@ footer#footer {
 	padding: 8px 0;
 }
 
+ol {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+ol.dropdown {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	border: 1px solid var(--default-border-color);
+	background: var(--background);
+	width: 100%;
+	box-shadow: 0 5px 5px 0 #00000020;
+}
+
+ol.dropdown button {
+	padding: 8px 8px;
+	width: 100%;
+	color: var(--foreground);
+	max-height: 10rem;
+	overflow-y: auto;
+	font-weight: 500;
+}
+
+ol.dropdown button:active,
+ol.dropdown button:focus,
+ol.dropdown button:hover {
+	background: var(--accent-color);
+	color: white;
+}
+
 @keyframes fadeIn {
 	0% {
 		opacity: 0;

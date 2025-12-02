@@ -10,7 +10,7 @@ function toggleTheme() {
 	}
 }
 
-function loadThemeForGuests() {
+function loadTheme() {
 	const theme = document.documentElement.getAttribute("data-theme");
 
 	if (!theme) {
@@ -18,4 +18,4 @@ function loadThemeForGuests() {
 	}
 }
 
-loadThemeForGuests();
+loadTheme();

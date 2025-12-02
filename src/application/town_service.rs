@@ -14,7 +14,7 @@ pub struct TownService {
 
 impl TownService {
     pub fn new(db: &DbConnection) -> Self {
-        TownService {
+        Self {
             town_repository: TownRepository::new(db),
         }
     }

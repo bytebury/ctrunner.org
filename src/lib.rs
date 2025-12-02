@@ -10,7 +10,7 @@ use tower_http::{
 };
 
 use crate::{
-    application::{TownService, UserService},
+    application::{RaceService, TownService, UserService},
     infrastructure::db::Database,
 };
 
@@ -54,6 +54,7 @@ async fn initialize() -> Router {
         .merge(routes::admin::routes())
         .merge(routes::members::routes())
         .merge(routes::submit_town::routes())
+        .merge(routes::races::routes())
         .with_state(state)
         .layer(CompressionLayer::new())
 }
@@ -82,6 +83,7 @@ pub struct AppState {
     pub app_info: AppInfo,
     pub user_service: UserService,
     pub town_service: TownService,
+    pub race_service: RaceService,
 }
 impl AppState {
     pub fn new(db: &DbConnection, app_info: AppInfo) -> Self {
@@ -89,6 +91,7 @@ impl AppState {
             app_info: app_info.clone(),
             user_service: UserService::new(db),
             town_service: TownService::new(db),
+            race_service: RaceService::new(db),
         }
     }
 }

@@ -8,13 +8,13 @@ pub struct TownRepository {
 
 impl TownRepository {
     pub fn new(db: &DbConnection) -> Self {
-        TownRepository { db: db.clone() }
+        Self { db: db.clone() }
     }
 
     pub async fn find_all(&self) -> Vec<Town> {
         query_as("SELECT * FROM towns_view ORDER BY name ASC")
             .fetch_all(self.db.as_ref())
             .await
-            .unwrap_or(vec![])
+            .unwrap_or_default()
     }
 }
