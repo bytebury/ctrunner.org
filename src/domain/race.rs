@@ -6,7 +6,7 @@ use crate::{
         distance::{DistanceUnit, Kilometers, Miles},
         town::SubmitTown,
     },
-    util::pagination::Paginatable,
+    util::pagination::{Paginatable, Pagination},
 };
 
 #[derive(Debug, Deserialize, Serialize, FromRow)]
@@ -47,6 +47,23 @@ impl Paginatable for RaceView {
 pub struct SubmitTownSearchParams {
     pub race_name: String,
     pub town_id: i64,
+}
+
+#[derive(Deserialize)]
+pub struct RaceSearchParams {
+    pub race_name: Option<String>,
+    pub town_id: Option<i64>,
+    pub page: Option<i64>,
+    pub page_size: Option<i64>,
+}
+
+impl From<RaceSearchParams> for Pagination {
+    fn from(params: RaceSearchParams) -> Self {
+        Self {
+            page: params.page,
+            page_size: params.page_size,
+        }
+    }
 }
 
 pub struct NewRace {

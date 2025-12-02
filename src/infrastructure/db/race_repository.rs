@@ -2,7 +2,7 @@ use sqlx::{query, query_as};
 
 use crate::{
     DbConnection,
-    domain::race::{NewRace, NewRaceResult, RaceView, SubmitTownSearchParams},
+    domain::race::{NewRace, NewRaceResult, RaceSearchParams, RaceView, SubmitTownSearchParams},
     util::pagination::{Paginatable, PaginatedResponse, Pagination},
 };
 
@@ -23,29 +23,6 @@ impl RaceRepository {
             .map_err(|e| format!("Failed to find race by ID: {}", e))?;
 
         Ok(race)
-    }
-
-    pub async fn submit_town_search(
-        &self,
-        params: &SubmitTownSearchParams,
-    ) -> PaginatedResponse<RaceView> {
-        let pattern = &format!("%{}%", params.race_name.to_lowercase());
-
-        RaceView::paginate_filter(
-            &self.db,
-            &Pagination::default(),
-            Some(
-                r#"
-            	LOWER(name) LIKE ? AND town_id = ? AND
-                start_date >= DATE('now', '-6 months') AND
-                start_date <= DATE('now')
-                ORDER BY start_date DESC
-                "#,
-            ),
-            vec![pattern, &params.town_id.to_string()],
-        )
-        .await
-        .unwrap()
     }
 
     pub async fn get_or_create(&self, race: NewRace) -> Result<RaceView, String> {
@@ -71,7 +48,7 @@ impl RaceRepository {
         self.find_by_id(race_id).await
     }
 
-    pub async fn save(&self, result: NewRaceResult) -> Result<(), String> {
+    pub async fn save_result(&self, result: NewRaceResult) -> Result<(), String> {
         query(
             r#"
             INSERT INTO race_results (user_id, race_id, notes)
@@ -86,5 +63,37 @@ impl RaceRepository {
         .map_err(|_| "Something went wrong submitting the result".to_string())?;
 
         Ok(())
+    }
+
+    pub async fn search_for_upcoming(
+        &self,
+        params: RaceSearchParams,
+    ) -> PaginatedResponse<RaceView> {
+        RaceView::paginate_filter(&self.db, &Pagination::from(params), None, vec![])
+            .await
+            .unwrap()
+    }
+
+    pub async fn submit_town_search(
+        &self,
+        params: &SubmitTownSearchParams,
+    ) -> PaginatedResponse<RaceView> {
+        let pattern = &format!("%{}%", params.race_name.to_lowercase());
+
+        RaceView::paginate_filter(
+            &self.db,
+            &Pagination::default(),
+            Some(
+                r#"
+            	LOWER(name) LIKE ? AND town_id = ? AND
+                start_date >= DATE('now', '-6 months') AND
+                start_date <= DATE('now')
+                ORDER BY start_date DESC
+                "#,
+            ),
+            vec![pattern, &params.town_id.to_string()],
+        )
+        .await
+        .unwrap()
     }
 }

@@ -38,7 +38,7 @@ impl TownService {
 
         let race_result = NewRaceResult::new(user.id, &race, form.notes);
         let _ = self.town_repository.mark_completed(user.id, town_id).await;
-        let _ = self.race_repository.save(race_result).await;
+        let _ = self.race_repository.save_result(race_result).await;
 
         Ok(())
     }

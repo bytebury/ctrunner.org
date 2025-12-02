@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<title>{{ shared.app_info.name }} | Races</title>
+		<meta name="description" content="Search for races uploaded by other members." />
+		<link rel="canonical" href="{{ shared.app_info.website_url }}" />
+		{% include "_partials/meta.html" %} {% include "_partials/scripts.html" %}
+	</head>
+	<body>
+		{% include "_partials/navbar.html" %}
+		<main>
+			<div class="container">
+				<section class="card flex-col">
+					<h1>Upcoming Races</h1>
+					{% if races.total > 0 %}
+					<ul>
+						{% for race in races.items %}
+						<li>
+							{{ race.name | title }} ({{ race.miles }} miles) - {{ race.start_date }}
+						</li>
+						{% endfor %}
+					</ul>
+					{% else %}
+					<p>No upcoming races found.</p>
+					{% endif %}
+				</section>
+			</div>
+		</main>
+		{% include "_partials/footer.html" %}
+	</body>
+</html>
