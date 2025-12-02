@@ -4,7 +4,7 @@ use crate::{
         Town, User,
         distance::{DistanceUnit, Kilometers, Miles},
         race::NewRace,
-        town::{Run169TownsSocietyGoogleForm, SubmitTown, SubmitTownForGoogle},
+        town::{Run169TownsSocietyGoogleForm, Run169TownsSocietyGoogleFormAnswers, SubmitTown},
     },
     infrastructure::db::{RaceRepository, TownRepository},
 };
@@ -35,8 +35,11 @@ impl TownService {
             DistanceUnit::Kilometers => Kilometers::new(form.distance_val).to_miles(),
         };
 
-        let google_form = SubmitTownForGoogle {
+        let answers = Run169TownsSocietyGoogleFormAnswers {
+            member_id: user.runner_id.unwrap().to_string(),
             distance_val,
+            first_name: user.first_name,
+            last_name: user.last_name,
             town_name,
             race_name: form.race_name.clone(),
             race_date: form.race_date,
@@ -45,7 +48,7 @@ impl TownService {
 
         // Submit the town to Run169Towns Society
         Run169TownsSocietyGoogleForm::new()
-            .add_answers(user, google_form)
+            .add_answers(answers)
             .submit()
             .await?;
 

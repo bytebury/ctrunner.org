@@ -1,5 +1,5 @@
+use crate::domain::distance::DistanceUnit;
 use crate::domain::distance::Miles;
-use crate::domain::{User, distance::DistanceUnit};
 use chrono::{Datelike, NaiveDate};
 use serde::{Deserialize, Serialize};
 use sqlx::FromRow;
@@ -40,12 +40,15 @@ pub struct SubmitTown {
     pub notes: String,
 }
 
-pub struct SubmitTownForGoogle {
+pub struct Run169TownsSocietyGoogleFormAnswers {
     pub town_name: String,
     pub race_name: String,
     pub distance_val: Miles,
     pub race_date: NaiveDate,
     pub notes: String,
+    pub member_id: String,
+    pub first_name: String,
+    pub last_name: String,
 }
 
 pub struct Run169TownsSocietyGoogleForm {
@@ -89,19 +92,16 @@ impl Run169TownsSocietyGoogleForm {
 
     pub fn add_answers(
         mut self,
-        user: User,
-        form: SubmitTownForGoogle,
+        form: Run169TownsSocietyGoogleFormAnswers,
     ) -> CompletedRun169TownsSocietyGoogleForm {
-        self.answers.insert(
-            format!("entry.{}", self.member_id),
-            user.runner_id.unwrap().to_string(),
-        );
+        self.answers
+            .insert(format!("entry.{}", self.member_id), form.member_id);
         self.answers
             .insert(format!("entry.{}", self.action), "New".to_string());
         self.answers
-            .insert(format!("entry.{}", self.first_name), user.first_name);
+            .insert(format!("entry.{}", self.first_name), form.first_name);
         self.answers
-            .insert(format!("entry.{}", self.last_name), user.last_name);
+            .insert(format!("entry.{}", self.last_name), form.last_name);
         self.answers
             .insert(format!("entry.{}", self.town_of_race), form.town_name);
         self.answers.insert(
