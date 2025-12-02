@@ -1,7 +1,10 @@
 use serde::{Deserialize, Serialize};
 use sqlx::prelude::FromRow;
 
-use crate::util::pagination::Paginatable;
+use crate::{
+    domain::{distance::Miles, town::SubmitTown},
+    util::pagination::Paginatable,
+};
 
 #[derive(Debug, Deserialize, Serialize, FromRow)]
 pub struct Race {
@@ -41,4 +44,26 @@ impl Paginatable for RaceView {
 pub struct SubmitTownSearchParams {
     pub race_name: String,
     pub town_id: i64,
+}
+
+pub struct NewRace {
+    pub name: String,
+    pub town_id: i64,
+    pub miles: Miles,
+    pub start_date: chrono::NaiveDate,
+    pub street_address: Option<String>,
+    pub race_url: Option<String>,
+}
+
+impl From<SubmitTown> for NewRace {
+    fn from(form: SubmitTown) -> Self {
+        Self {
+            name: form.race_name,
+            town_id: form.town_id,
+            miles: Miles::new(form.distance_val),
+            start_date: form.race_date,
+            street_address: None,
+            race_url: None,
+        }
+    }
 }

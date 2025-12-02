@@ -8,7 +8,7 @@ CREATE TABLE races (
     race_url TEXT,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE(town_id, name)
+    UNIQUE(town_id, name, miles)
 );
 
 -- Update updated_at when there are changes

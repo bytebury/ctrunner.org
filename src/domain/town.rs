@@ -32,6 +32,7 @@ impl fmt::Display for Town {
 #[derive(Serialize, Deserialize, Default)]
 pub struct SubmitTown {
     pub town_id: i64,
+    pub race_name: String,
     pub race_id: i64,
     pub distance_val: f64,
     pub distance_unit: DistanceUnit,

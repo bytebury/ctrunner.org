@@ -2,7 +2,7 @@ function selectRace(race) {
 	showTertiaryQuestions();
 
 	race_id.value = race.id;
-	race_name.value = race.name;
+	race_name.value = titleCase(race.name);
 	distance_val.value = race.miles;
 	distance_unit.value = "miles";
 	race_date.value = race.start_date;
@@ -30,4 +30,12 @@ function enableRaceSearch() {
 function showTertiaryQuestions() {
 	tertiary_questions.classList.remove("hidden");
 	tertiary_questions.classList.add("flex-col");
+}
+
+function titleCase(str) {
+	return str
+		.toLowerCase()
+		.split(" ")
+		.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+		.join(" ");
 }

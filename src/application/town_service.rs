@@ -3,19 +3,22 @@ use crate::{
     domain::{
         Town, User,
         distance::{DistanceUnit, Kilometers, Miles},
+        race::NewRace,
         town::{SubmitTown, SubmitTownForGoogle, SubmitTownGoogleForm},
     },
-    infrastructure::db::TownRepository,
+    infrastructure::db::{RaceRepository, TownRepository},
 };
 
 pub struct TownService {
     town_repository: TownRepository,
+    race_repository: RaceRepository,
 }
 
 impl TownService {
     pub fn new(db: &DbConnection) -> Self {
         Self {
             town_repository: TownRepository::new(db),
+            race_repository: RaceRepository::new(db),
         }
     }
 
@@ -24,23 +27,37 @@ impl TownService {
     }
 
     pub async fn submit_completed_town(&self, user: User, form: SubmitTown) -> Result<(), String> {
+        let user_id = user.id;
+        let town_name = self.town_repository.find_by_id(form.town_id).await?.name;
         let distance_val = match form.distance_unit {
             DistanceUnit::Miles => Miles::new(form.distance_val),
             DistanceUnit::Kilometers => Kilometers::new(form.distance_val).to_miles(),
         };
+
         let google_form = SubmitTownForGoogle {
             distance_val,
-            town_name: "Andover".to_string(),
-            race_name: "Andover Run".to_string(),
+            town_name,
+            race_name: form.race_name.clone(),
             race_date: form.race_date,
-            notes: form.notes,
+            notes: form.notes.clone(),
         };
 
         SubmitTownGoogleForm::new()
             .add_answers(user, google_form)
             .submit()
-            .await
+            .await?;
 
-        // TODO: Once this is submitted successfully, then we can update our tables
+        // Mark the town as completed
+        let _ = self
+            .town_repository
+            .mark_completed(user_id, form.town_id)
+            .await;
+
+        // If user didn't enter an existing race, we'll create one
+        if form.race_id == 0 {
+            let _ = self.race_repository.create_race(NewRace::from(form)).await;
+        }
+
+        Ok(())
     }
 }

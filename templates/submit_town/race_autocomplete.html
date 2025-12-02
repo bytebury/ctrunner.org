@@ -8,7 +8,7 @@
 				onclick='selectRace(JSON.parse(`{{ race | tojson | safe }}`))'
 			>
 				<div>
-					<strong>{{ race.name }} ({{ race.miles }} miles)</strong>
+					<strong>{{ race.name | title }} ({{ race.miles }} miles)</strong>
 					on {{ race.start_date | date }}
 				</div>
 			</button>

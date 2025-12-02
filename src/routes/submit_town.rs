@@ -67,6 +67,7 @@ async fn submit_town(
     CurrentUser(user): CurrentUser,
     Form(form): Form<SubmitTown>,
 ) -> impl IntoResponse {
+    // TODO: We'll need to validate the form data.
     // TODO: We'll need to handle the error scenario and success scenario.
     //       We should celebrate the user's achievement!
     match state.town_service.submit_completed_town(*user, form).await {
