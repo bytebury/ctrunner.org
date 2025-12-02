@@ -44,9 +44,9 @@
 										<td class="nowrap">{{ race.town }}</td>
 										<td class="nowrap">{{ race.name | title }}</td>
 										<td class="nowrap">{{ race.miles }} Miles</td>
-										<td>
+										<td class="nowrap">
 											{% if let Some(website) = race.race_url %}
-											<a target="_blank" href="{{ website }}"
+											<a target="_blank" href="{{ website }}" class="nowrap"
 												>Visit Race Website</a
 											>
 											{% endif %}
