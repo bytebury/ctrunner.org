@@ -12,6 +12,7 @@
 			<div class="container">
 				<section class="card flex-col">
 					<h1>Search Members</h1>
+					{% if users.total > 0 %}
 					<form>
 						<div class="form-control">
 							<label for="user_search">Search</label>
@@ -28,9 +29,10 @@
 							/>
 						</div>
 					</form>
+					{% endif %}
 					<div id="user_list" class="flex-col gap-2">
+						{% if users.items.len() > 0 %}
 						<div class="table-responsive">
-							{% if users.items.len() > 0 %}
 							<table>
 								<thead>
 									<tr>

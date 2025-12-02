@@ -12,17 +12,46 @@
 			<div class="container">
 				<section class="card flex-col">
 					<h1>Upcoming Races</h1>
-					{% if races.total > 0 %}
-					<ul>
-						{% for race in races.items %}
-						<li>
-							{{ race.name | title }} ({{ race.miles }} miles) - {{ race.start_date }}
-						</li>
-						{% endfor %}
-					</ul>
-					{% else %}
-					<p>No upcoming races found.</p>
-					{% endif %}
+					<div id="upcoming_race_list" class="flex-col gap-2">
+						{% if races.total > 0 %}
+						<div class="table-responsive">
+							<table>
+								<thead>
+									<tr>
+										<th>Date</th>
+										<th>Town</th>
+										<th>Name</th>
+										<th>Distance</th>
+										<th>Website</th>
+									</tr>
+								</thead>
+								<tbody>
+									{% for race in races.items %}
+									<tr>
+										<td class="nowrap">
+											{{ race.start_date | date }} at 10:00 AM
+										</td>
+										<td class="nowrap">{{ race.town }}</td>
+										<td class="nowrap">{{ race.name | title }}</td>
+										<td class="nowrap">{{ race.miles }} Miles</td>
+										<td>
+											{% if let Some(website) = race.race_url %}
+											<a target="_blank" href="{{ website }}">{{ website}}</a>
+											{% endif %}
+										</td>
+									</tr>
+									{% endfor %}
+								</tbody>
+							</table>
+						</div>
+						<div class="muted text-right text-sm">
+							{% if races.total == 1 %} {{ races.total }} upcoming races {% else %} {{
+							races.total }} upcoming races {% endif %}
+						</div>
+						{% else %}
+						<p>No upcoming races found.</p>
+						{% endif %}
+					</div>
 				</section>
 			</div>
 		</main>
