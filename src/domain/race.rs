@@ -58,6 +58,22 @@ pub struct NewRace {
     pub race_url: Option<String>,
 }
 
+pub struct NewRaceResult {
+    pub user_id: i64,
+    pub race_id: i64,
+    pub notes: Option<String>,
+}
+
+impl NewRaceResult {
+    pub fn new(user_id: i64, race: &RaceView, notes: Option<String>) -> Self {
+        Self {
+            user_id,
+            race_id: race.id,
+            notes,
+        }
+    }
+}
+
 impl From<SubmitTown> for NewRace {
     fn from(form: SubmitTown) -> Self {
         let miles = match form.distance_unit {

@@ -2,8 +2,7 @@ use crate::{
     DbConnection,
     domain::{
         Town, User,
-        distance::{DistanceUnit, Kilometers, Miles},
-        race::NewRace,
+        race::{NewRace, NewRaceResult},
         town::{Run169TownsSocietyGoogleForm, Run169TownsSocietyGoogleFormAnswers, SubmitTown},
     },
     infrastructure::db::{RaceRepository, TownRepository},
@@ -27,35 +26,19 @@ impl TownService {
     }
 
     pub async fn submit_completed_town(&self, user: User, form: SubmitTown) -> Result<(), String> {
-        let user_id = user.id;
         let town_id = form.town_id;
-        let town_name = self.town_repository.find_by_id(form.town_id).await?.name;
-        let distance_val = match form.distance_unit {
-            DistanceUnit::Miles => Miles::new(form.distance_val),
-            DistanceUnit::Kilometers => Kilometers::new(form.distance_val).to_miles(),
-        };
+        let town = self.town_repository.find_by_id(town_id).await?;
 
-        let answers = Run169TownsSocietyGoogleFormAnswers {
-            member_id: user.runner_id.unwrap().to_string(),
-            distance_val,
-            first_name: user.first_name,
-            last_name: user.last_name,
-            town_name,
-            race_name: form.race_name.clone(),
-            race_date: form.race_date,
-            notes: form.notes.clone(),
-        };
+        let new_race = NewRace::from(form.clone());
+        let race = self.race_repository.get_or_create(new_race).await?;
 
-        // Submit the town to Run169Towns Society
-        Run169TownsSocietyGoogleForm::new()
-            .add_answers(answers)
-            .submit()
-            .await?;
+        // Submit the form to Run169Towns Society.
+        let answers = Run169TownsSocietyGoogleFormAnswers::new(&user, &town, &form);
+        Run169TownsSocietyGoogleForm::submit_with_answers(answers).await?;
 
-        // Mark the town as completed.
-        let _ = self.town_repository.mark_completed(user_id, town_id).await;
-        // Always try to create a race, it will reject if there's one that exists.
-        let _ = self.race_repository.create_race(NewRace::from(form)).await;
+        let race_result = NewRaceResult::new(user.id, &race, form.notes);
+        let _ = self.town_repository.mark_completed(user.id, town_id).await;
+        let _ = self.race_repository.save(race_result).await;
 
         Ok(())
     }

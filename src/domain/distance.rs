@@ -32,7 +32,7 @@ impl Kilometers {
     }
 }
 
-#[derive(Default, Serialize, Deserialize, PartialEq, Eq)]
+#[derive(Default, Serialize, Deserialize, PartialEq, Eq, Clone)]
 #[serde(rename_all = "lowercase")]
 pub enum DistanceUnit {
     #[default]

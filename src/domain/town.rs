@@ -1,4 +1,6 @@
+use crate::domain::User;
 use crate::domain::distance::DistanceUnit;
+use crate::domain::distance::Kilometers;
 use crate::domain::distance::Miles;
 use chrono::{Datelike, NaiveDate};
 use serde::{Deserialize, Serialize};
@@ -29,7 +31,7 @@ impl fmt::Display for Town {
     }
 }
 
-#[derive(Serialize, Deserialize, Default)]
+#[derive(Serialize, Deserialize, Default, Clone)]
 pub struct SubmitTown {
     pub town_id: i64,
     pub race_name: String,
@@ -37,7 +39,7 @@ pub struct SubmitTown {
     pub distance_val: f64,
     pub distance_unit: DistanceUnit,
     pub race_date: NaiveDate,
-    pub notes: String,
+    pub notes: Option<String>,
 }
 
 pub struct Run169TownsSocietyGoogleFormAnswers {
@@ -49,6 +51,26 @@ pub struct Run169TownsSocietyGoogleFormAnswers {
     pub member_id: String,
     pub first_name: String,
     pub last_name: String,
+}
+
+impl Run169TownsSocietyGoogleFormAnswers {
+    pub fn new(user: &User, town: &Town, form: &SubmitTown) -> Self {
+        let distance_val = match form.distance_unit {
+            DistanceUnit::Miles => Miles::new(form.distance_val),
+            DistanceUnit::Kilometers => Kilometers::new(form.distance_val).to_miles(),
+        };
+
+        Self {
+            member_id: user.runner_id.unwrap().to_string(),
+            distance_val,
+            first_name: user.first_name.clone(),
+            last_name: user.last_name.clone(),
+            town_name: town.name.clone(),
+            race_name: form.race_name.clone(),
+            race_date: form.race_date,
+            notes: form.notes.clone().unwrap_or_default(),
+        }
+    }
 }
 
 pub struct Run169TownsSocietyGoogleForm {
@@ -70,7 +92,7 @@ pub struct Run169TownsSocietyGoogleForm {
 }
 
 impl Run169TownsSocietyGoogleForm {
-    pub fn new() -> Self {
+    fn new() -> Self {
         Self {
             form_id: "1FAIpQLScHViJvQL0G_ZPuCZOIFNsBPthZwDSzbkgiFFeL93wp831diA".to_string(),
             member_id: "1858653824".to_string(),
@@ -90,7 +112,13 @@ impl Run169TownsSocietyGoogleForm {
         }
     }
 
-    pub fn add_answers(
+    pub async fn submit_with_answers(
+        answers: Run169TownsSocietyGoogleFormAnswers,
+    ) -> Result<(), String> {
+        Self::new().add_answers(answers).submit().await
+    }
+
+    fn add_answers(
         mut self,
         form: Run169TownsSocietyGoogleFormAnswers,
     ) -> CompletedRun169TownsSocietyGoogleForm {

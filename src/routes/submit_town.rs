@@ -73,11 +73,14 @@ async fn submit_town(
     //       We should celebrate the user's achievement!
     match state.town_service.submit_completed_town(*user, form).await {
         Ok(_) => HTMX::refresh().into_response(),
-        Err(_) => SubmitTownPage {
-            towns: state.town_service.find_all().await,
-            max_race_date: Utc::now().with_timezone(&New_York).date_naive(),
-            ..Default::default()
+        Err(msg) => {
+            println!("{msg}");
+            SubmitTownPage {
+                towns: state.town_service.find_all().await,
+                max_race_date: Utc::now().with_timezone(&New_York).date_naive(),
+                ..Default::default()
+            }
+            .into_response()
         }
-        .into_response(),
     }
 }
