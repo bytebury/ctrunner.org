@@ -1,3 +1,4 @@
+use crate::domain::Town;
 use crate::domain::race::{NewRace, NewRaceForm};
 use crate::extract::CurrentUser;
 use crate::filters;
@@ -42,6 +43,7 @@ pub struct UpcomingRacesTemplate {
 #[template(path = "races/add_upcoming.html")]
 pub struct AddUpcomingRaceTemplate {
     min_race_date: NaiveDateTime,
+    towns: Vec<Town>,
 }
 
 pub async fn add_race(
@@ -67,8 +69,12 @@ async fn upcoming_races_page(
     }
 }
 
-async fn add_race_page(CurrentUser(_): CurrentUser) -> impl IntoResponse {
+async fn add_race_page(
+    State(state): State<SharedState>,
+    CurrentUser(_): CurrentUser,
+) -> impl IntoResponse {
     AddUpcomingRaceTemplate {
+        towns: state.town_service.find_all().await,
         min_race_date: Utc::now()
             .with_timezone(&New_York)
             .date_naive()

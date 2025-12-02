@@ -13,6 +13,7 @@
 				<section class="card flex-col">
 					<div class="flex items-center justify-between">
 						<h1>Upcoming Races</h1>
+						{% if let Some(user) = shared.current_user %}
 						<button
 							class="btn info"
 							hx-get="/upcoming-races/add"
@@ -21,6 +22,7 @@
 						>
 							Add Race
 						</button>
+						{% endif %}
 					</div>
 					<div id="upcoming_race_list" class="flex-col gap-2">
 						{% if races.total > 0 %}

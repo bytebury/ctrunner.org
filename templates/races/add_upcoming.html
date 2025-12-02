@@ -16,8 +16,10 @@
 	<div class="form-control">
 		<label for="town_id">Town Name</label>
 		<select id="town_id" name="town_id" required>
-			<option value="" selected disabled>Please select...</option>
-			<option value="1">Andover</option>
+			<option value="" selected disabled>Please Select...</option>
+			{% for town in towns %}
+			<option value="{{ town.id }}">{{ town.name }}</option>
+			{% endfor %}
 		</select>
 	</div>
 	<div class="grid" style="grid-template-columns: 1fr 1fr">
