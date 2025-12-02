@@ -48,7 +48,7 @@ pub struct SubmitTownForGoogle {
     pub notes: String,
 }
 
-pub struct SubmitTownGoogleForm {
+pub struct Run169TownsSocietyGoogleForm {
     form_id: String,
     member_id: String,
     action: String,
@@ -66,7 +66,7 @@ pub struct SubmitTownGoogleForm {
     answers: HashMap<String, String>,
 }
 
-impl SubmitTownGoogleForm {
+impl Run169TownsSocietyGoogleForm {
     pub fn new() -> Self {
         Self {
             form_id: "1FAIpQLScHViJvQL0G_ZPuCZOIFNsBPthZwDSzbkgiFFeL93wp831diA".to_string(),
@@ -91,7 +91,7 @@ impl SubmitTownGoogleForm {
         mut self,
         user: User,
         form: SubmitTownForGoogle,
-    ) -> CompletedSubmitTownGoogleForm {
+    ) -> CompletedRun169TownsSocietyGoogleForm {
         self.answers.insert(
             format!("entry.{}", self.member_id),
             user.runner_id.unwrap().to_string(),
@@ -129,13 +129,13 @@ impl SubmitTownGoogleForm {
         self.answers
             .insert(format!("entry.{}", self.comment), form.notes);
 
-        CompletedSubmitTownGoogleForm(self)
+        CompletedRun169TownsSocietyGoogleForm(self)
     }
 }
 
-pub struct CompletedSubmitTownGoogleForm(SubmitTownGoogleForm);
+pub struct CompletedRun169TownsSocietyGoogleForm(Run169TownsSocietyGoogleForm);
 
-impl CompletedSubmitTownGoogleForm {
+impl CompletedRun169TownsSocietyGoogleForm {
     pub async fn submit(&self) -> Result<(), String> {
         let base_url = "https://docs.google.com/forms/d/e";
         let url = format!("{}/{}/formResponse", base_url, self.0.form_id);

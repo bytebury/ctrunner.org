@@ -1,6 +1,7 @@
 use crate::domain::distance::DistanceUnit;
 use crate::domain::race::{RaceView, SubmitTownSearchParams};
 use crate::filters;
+use crate::util::htmx::HTMX;
 use crate::util::pagination::PaginatedResponse;
 use crate::{
     SharedState,
@@ -71,12 +72,7 @@ async fn submit_town(
     // TODO: We'll need to handle the error scenario and success scenario.
     //       We should celebrate the user's achievement!
     match state.town_service.submit_completed_town(*user, form).await {
-        Ok(_) => SubmitTownPage {
-            towns: state.town_service.find_all().await,
-            max_race_date: Utc::now().with_timezone(&New_York).date_naive(),
-            ..Default::default()
-        }
-        .into_response(),
+        Ok(_) => HTMX::refresh().into_response(),
         Err(_) => SubmitTownPage {
             towns: state.town_service.find_all().await,
             max_race_date: Utc::now().with_timezone(&New_York).date_naive(),
