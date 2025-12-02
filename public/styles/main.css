@@ -288,14 +288,6 @@ select:disabled {
 	cursor: not-allowed;
 }
 
-.relative {
-	position: relative;
-}
-
-.absolute {
-	position: absolute;
-}
-
 textarea {
 	resize: vertical;
 	min-height: 5rem;

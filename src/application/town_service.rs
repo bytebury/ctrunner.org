@@ -47,16 +47,14 @@ impl TownService {
             .submit()
             .await?;
 
-        // Mark the town as completed
+        // Mark the town as completed.
         let _ = self
             .town_repository
             .mark_completed(user_id, form.town_id)
             .await;
 
-        // If user didn't enter an existing race, we'll create one
-        if form.race_id == 0 {
-            let _ = self.race_repository.create_race(NewRace::from(form)).await;
-        }
+        // Always try to create a race, it will reject if there's one that exists.
+        let _ = self.race_repository.create_race(NewRace::from(form)).await;
 
         Ok(())
     }

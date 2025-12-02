@@ -2,7 +2,10 @@ use serde::{Deserialize, Serialize};
 use sqlx::prelude::FromRow;
 
 use crate::{
-    domain::{distance::Miles, town::SubmitTown},
+    domain::{
+        distance::{DistanceUnit, Kilometers, Miles},
+        town::SubmitTown,
+    },
     util::pagination::Paginatable,
 };
 
@@ -57,10 +60,14 @@ pub struct NewRace {
 
 impl From<SubmitTown> for NewRace {
     fn from(form: SubmitTown) -> Self {
+        let miles = match form.distance_unit {
+            DistanceUnit::Miles => Miles::new(form.distance_val),
+            DistanceUnit::Kilometers => Kilometers::new(form.distance_val).to_miles(),
+        };
         Self {
             name: form.race_name,
             town_id: form.town_id,
-            miles: Miles::new(form.distance_val),
+            miles,
             start_date: form.race_date,
             street_address: None,
             race_url: None,

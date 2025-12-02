@@ -24,7 +24,14 @@ impl RaceRepository {
         RaceView::paginate_filter(
             &self.db,
             &Pagination::default(),
-            Some(r#"(LOWER(name) LIKE ? AND town_id = ?) ORDER BY start_date DESC"#),
+            Some(
+                r#"
+            	LOWER(name) LIKE ? AND town_id = ? AND
+                start_date >= DATE('now', '-6 months') AND
+                start_date <= DATE('now')
+                ORDER BY start_date DESC
+                "#,
+            ),
             vec![pattern, &params.town_id.to_string()],
         )
         .await
