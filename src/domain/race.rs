@@ -1,3 +1,5 @@
+use crate::util::parse_no_seconds;
+use chrono::NaiveDateTime;
 use serde::{Deserialize, Serialize};
 use sqlx::prelude::FromRow;
 
@@ -15,9 +17,9 @@ pub struct Race {
     pub town_id: i64,
     pub name: String,
     pub miles: f64,
-    pub start_date: chrono::NaiveDate,
     pub street_address: Option<String>,
     pub race_url: Option<String>,
+    pub start_at: chrono::NaiveDateTime,
     pub created_at: chrono::NaiveDateTime,
     pub updated_at: chrono::NaiveDateTime,
 }
@@ -30,9 +32,9 @@ pub struct RaceView {
     pub town: String,
     pub county: String,
     pub miles: f64,
-    pub start_date: chrono::NaiveDate,
     pub street_address: Option<String>,
     pub race_url: Option<String>,
+    pub start_at: chrono::NaiveDateTime,
     pub created_at: chrono::NaiveDateTime,
     pub updated_at: chrono::NaiveDateTime,
 }
@@ -66,11 +68,23 @@ impl From<RaceSearchParams> for Pagination {
     }
 }
 
+#[derive(Deserialize)]
+pub struct NewRaceForm {
+    pub name: String,
+    pub town_id: i64,
+    pub distance_val: f64,
+    pub distance_unit: DistanceUnit,
+    #[serde(deserialize_with = "parse_no_seconds")]
+    pub start_at: NaiveDateTime,
+    pub street_address: String,
+    pub race_url: String,
+}
+
 pub struct NewRace {
     pub name: String,
     pub town_id: i64,
     pub miles: Miles,
-    pub start_date: chrono::NaiveDate,
+    pub start_at: chrono::NaiveDateTime,
     pub street_address: Option<String>,
     pub race_url: Option<String>,
 }
@@ -101,9 +115,26 @@ impl From<SubmitTown> for NewRace {
             name: form.race_name,
             town_id: form.town_id,
             miles,
-            start_date: form.race_date,
+            start_at: form.start_at,
             street_address: None,
             race_url: None,
+        }
+    }
+}
+
+impl From<NewRaceForm> for NewRace {
+    fn from(form: NewRaceForm) -> Self {
+        let miles = match form.distance_unit {
+            DistanceUnit::Miles => Miles::new(form.distance_val),
+            DistanceUnit::Kilometers => Kilometers::new(form.distance_val).to_miles(),
+        };
+        Self {
+            name: form.name,
+            town_id: form.town_id,
+            miles,
+            start_at: form.start_at,
+            street_address: Some(form.street_address),
+            race_url: Some(form.race_url),
         }
     }
 }

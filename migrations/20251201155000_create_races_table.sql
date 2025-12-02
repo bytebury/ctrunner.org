@@ -3,12 +3,12 @@ CREATE TABLE races (
     town_id INTEGER NOT NULL REFERENCES towns(id),
     name TEXT NOT NULL,
     miles REAL NOT NULL,
-    start_date DATE NOT NULL,
+    start_at DATETIME NOT NULL,
     street_address TEXT,
     race_url TEXT,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE(town_id, name, miles, start_date)
+    UNIQUE(town_id, name, miles, start_at)
 );
 
 -- Update updated_at when there are changes

@@ -5,11 +5,13 @@
 			<button
 				type="button"
 				class="text-left"
-				onclick='selectRace(JSON.parse(`{{ race | tojson | safe }}`))'
+				onclick="selectRace(JSON.parse(`{{ race | tojson | safe }}`))"
 			>
 				<div class="flex-col gap-1">
 					<strong>{{ race.name | title }} ({{ race.miles }} miles)</strong>
-					<div class="text-sm" style="opacity: 0.8">on {{ race.start_date | date }}</div>
+					<div class="text-sm" style="opacity: 0.8">
+						on {{ race.start_at | datetime }}
+					</div>
 				</div>
 			</button>
 		</li>
@@ -20,5 +22,7 @@
 			</button>
 		</li>
 	</ol>
-	<script>attachDropdown(secondary_questions)</script>
+	<script>
+		attachDropdown(secondary_questions);
+	</script>
 </div>

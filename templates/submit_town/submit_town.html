@@ -18,7 +18,7 @@
 				id="race_name"
 				name="race_name"
 				type="text"
-				hx-trigger="keyup changed, focus"
+				hx-trigger="keyup changed delay:300ms, focus"
 				hx-get="/submit-town/search"
 				hx-target="#results"
 				hx-include="#town_id"
@@ -54,8 +54,14 @@
 			</div>
 		</div>
 		<div class="form-control">
-			<label for="race_date">Date of the Race</label>
-			<input type="date" id="race_date" name="race_date" max="{{ max_race_date }}" required />
+			<label for="start_at">Date of the Race</label>
+			<input
+				type="datetime-local"
+				id="start_at"
+				name="start_at"
+				max="{{ max_race_date }}"
+				required
+			/>
 		</div>
 	</div>
 	<div class="form-control">

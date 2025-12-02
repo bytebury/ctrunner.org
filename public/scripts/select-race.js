@@ -5,7 +5,7 @@ function selectRace(race) {
 	race_name.value = titleCase(race.name);
 	distance_val.value = race.miles;
 	distance_unit.value = "miles";
-	race_date.value = race.start_date;
+	start_at.value = race.start_at;
 }
 
 function selectedNoRace() {

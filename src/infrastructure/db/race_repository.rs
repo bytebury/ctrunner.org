@@ -28,9 +28,9 @@ impl RaceRepository {
     pub async fn get_or_create(&self, race: NewRace) -> Result<RaceView, String> {
         let race_id: i64 = sqlx::query_scalar(
             r#"
-       		INSERT INTO races (town_id, name, miles, start_date, street_address, race_url)
+       		INSERT INTO races (town_id, name, miles, start_at, street_address, race_url)
             VALUES (?, LOWER(?), ?, ?, ?, ?)
-            ON CONFLICT(town_id, name, miles, start_date)
+            ON CONFLICT(town_id, name, miles, start_at)
             DO UPDATE SET name = name
             RETURNING id
        		"#,
@@ -38,7 +38,7 @@ impl RaceRepository {
         .bind(race.town_id)
         .bind(race.name)
         .bind(race.miles.value())
-        .bind(race.start_date)
+        .bind(race.start_at)
         .bind(race.street_address)
         .bind(race.race_url)
         .fetch_one(self.db.as_ref())
@@ -69,9 +69,14 @@ impl RaceRepository {
         &self,
         params: RaceSearchParams,
     ) -> PaginatedResponse<RaceView> {
-        RaceView::paginate_filter(&self.db, &Pagination::from(params), None, vec![])
-            .await
-            .unwrap()
+        RaceView::paginate_filter(
+            &self.db,
+            &Pagination::from(params),
+            Some(r#"start_at >= DateTime('now') ORDER BY start_at ASC"#),
+            vec![],
+        )
+        .await
+        .unwrap()
     }
 
     pub async fn submit_town_search(
@@ -86,9 +91,9 @@ impl RaceRepository {
             Some(
                 r#"
             	LOWER(name) LIKE ? AND town_id = ? AND
-                start_date >= DATE('now', '-6 months') AND
-                start_date <= DATE('now')
-                ORDER BY start_date DESC
+                start_at >= DateTime('now', '-6 months') AND
+                start_at <= DateTime('now')
+                ORDER BY start_at DESC
                 "#,
             ),
             vec![pattern, &params.town_id.to_string()],

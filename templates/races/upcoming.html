@@ -11,7 +11,17 @@
 		<main>
 			<div class="container">
 				<section class="card flex-col">
-					<h1>Upcoming Races</h1>
+					<div class="flex items-center justify-between">
+						<h1>Upcoming Races</h1>
+						<button
+							class="btn info"
+							hx-get="/upcoming-races/add"
+							hx-trigger="click"
+							hx-target="#modal"
+						>
+							Add Race
+						</button>
+					</div>
 					<div id="upcoming_race_list" class="flex-col gap-2">
 						{% if races.total > 0 %}
 						<div class="table-responsive">
@@ -28,15 +38,15 @@
 								<tbody>
 									{% for race in races.items %}
 									<tr>
-										<td class="nowrap">
-											{{ race.start_date | date }} at 10:00 AM
-										</td>
+										<td class="nowrap">{{ race.start_at | datetime }}</td>
 										<td class="nowrap">{{ race.town }}</td>
 										<td class="nowrap">{{ race.name | title }}</td>
 										<td class="nowrap">{{ race.miles }} Miles</td>
 										<td>
 											{% if let Some(website) = race.race_url %}
-											<a target="_blank" href="{{ website }}">{{ website}}</a>
+											<a target="_blank" href="{{ website }}"
+												>Visit Race Website</a
+											>
 											{% endif %}
 										</td>
 									</tr>
@@ -45,7 +55,7 @@
 							</table>
 						</div>
 						<div class="muted text-right text-sm">
-							{% if races.total == 1 %} {{ races.total }} upcoming races {% else %} {{
+							{% if races.total == 1 %} {{ races.total }} upcoming race {% else %} {{
 							races.total }} upcoming races {% endif %}
 						</div>
 						{% else %}

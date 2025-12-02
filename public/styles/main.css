@@ -174,6 +174,10 @@ img {
 	gap: var(--default-spacing);
 }
 
+.justify-between {
+	justify-content: space-between;
+}
+
 .nowrap {
 	white-space: nowrap;
 }

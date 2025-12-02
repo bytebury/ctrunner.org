@@ -1,3 +1,6 @@
+use chrono::NaiveDateTime;
+use serde::{Deserialize, Deserializer};
+
 pub mod htmx;
 pub mod pagination;
 pub mod rbac;
@@ -19,4 +22,12 @@ impl StringExt for str {
     fn is_whitespace_or_empty(&self) -> bool {
         self.trim().is_empty()
     }
+}
+
+pub fn parse_no_seconds<'de, D>(deserializer: D) -> Result<NaiveDateTime, D::Error>
+where
+    D: Deserializer<'de>,
+{
+    let s = String::deserialize(deserializer)?;
+    NaiveDateTime::parse_from_str(&s, "%Y-%m-%dT%H:%M").map_err(serde::de::Error::custom)
 }

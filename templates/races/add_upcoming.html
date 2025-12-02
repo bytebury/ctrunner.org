@@ -1,0 +1,79 @@
+<header>
+	<h1>Add Race</h1>
+</header>
+<form id="add_race_form" hx-put="/races" hx-select="#add_race_form">
+	<div class="form-control">
+		<label for="name">Race Name</label>
+		<input
+			id="name"
+			name="name"
+			type="text"
+			required
+			autocomplete="off"
+			placeholder="Jingle Bells 5K"
+		/>
+	</div>
+	<div class="form-control">
+		<label for="town_id">Town Name</label>
+		<select id="town_id" name="town_id" required>
+			<option value="" selected disabled>Please select...</option>
+			<option value="1">Andover</option>
+		</select>
+	</div>
+	<div class="grid" style="grid-template-columns: 1fr 1fr">
+		<div class="form-control">
+			<label for="distance_val">Distance</label>
+			<input
+				id="distance_val"
+				name="distance_val"
+				type="number"
+				inputmode="decimal"
+				required
+				autocomplete="off"
+			/>
+		</div>
+		<div class="form-control">
+			<label for="distance_unit">Unit</label>
+			<select id="distance_unit" name="distance_unit" required>
+				<option value="miles" selected>Miles</option>
+				<option value="kilometers">Kilometers</option>
+			</select>
+		</div>
+	</div>
+	<div class="form-control">
+		<label for="street_address">Street Address</label>
+		<input
+			id="street_address"
+			name="street_address"
+			type="text"
+			required
+			autocomplete="off"
+			placeholder="123 Main Street"
+		/>
+	</div>
+	<div class="form-control">
+		<label for="start_at">Start Date and Time</label>
+		<input
+			id="start_at"
+			name="start_at"
+			type="datetime-local"
+			min="{{ min_race_date }}"
+			step="900"
+			required
+		/>
+	</div>
+	<div class="form-control">
+		<label for="race_url">Race Website</label>
+		<input
+			id="race_url"
+			name="race_url"
+			type="text"
+			placeholder="https://runsignup.com/your-race"
+			required
+		/>
+	</div>
+</form>
+<div class="form-actions">
+	<button form="add_race_form" type="submit">Add Race</button>
+	<button type="reset" onclick="closeModal()">Close</button>
+</div>

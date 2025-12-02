@@ -1,6 +1,6 @@
 use crate::{
     DbConnection,
-    domain::race::{NewRaceResult, RaceSearchParams, RaceView, SubmitTownSearchParams},
+    domain::race::{NewRace, NewRaceResult, RaceSearchParams, RaceView, SubmitTownSearchParams},
     infrastructure::db::RaceRepository,
     util::pagination::PaginatedResponse,
 };
@@ -25,6 +25,10 @@ impl RaceService {
 
     pub async fn submit_result(&self, result: NewRaceResult) -> Result<(), String> {
         self.race_repository.save_result(result).await
+    }
+
+    pub async fn get_or_create(&self, race: NewRace) -> Result<RaceView, String> {
+        self.race_repository.get_or_create(race).await
     }
 
     pub async fn search_for_upcoming(

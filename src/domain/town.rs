@@ -2,6 +2,8 @@ use crate::domain::User;
 use crate::domain::distance::DistanceUnit;
 use crate::domain::distance::Kilometers;
 use crate::domain::distance::Miles;
+use crate::util::parse_no_seconds;
+use chrono::NaiveDateTime;
 use chrono::{Datelike, NaiveDate};
 use serde::{Deserialize, Serialize};
 use sqlx::FromRow;
@@ -38,7 +40,8 @@ pub struct SubmitTown {
     pub race_id: i64,
     pub distance_val: f64,
     pub distance_unit: DistanceUnit,
-    pub race_date: NaiveDate,
+    #[serde(deserialize_with = "parse_no_seconds")]
+    pub start_at: NaiveDateTime,
     pub notes: Option<String>,
 }
 
@@ -67,7 +70,7 @@ impl Run169TownsSocietyGoogleFormAnswers {
             last_name: user.last_name.clone(),
             town_name: town.name.clone(),
             race_name: form.race_name.clone(),
-            race_date: form.race_date,
+            race_date: form.start_at.date(),
             notes: form.notes.clone().unwrap_or_default(),
         }
     }
