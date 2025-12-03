@@ -15,7 +15,7 @@
 						<h1>Upcoming Races</h1>
 						{% if let Some(user) = shared.current_user %}
 						<button
-							class="btn info"
+							class="btn info text-sm"
 							hx-get="/upcoming-races/add"
 							hx-trigger="click"
 							hx-target="#modal"
