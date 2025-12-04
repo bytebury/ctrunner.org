@@ -1,18 +1,26 @@
 use crate::{
     DbConnection,
-    domain::race::{NewRace, NewRaceResult, RaceSearchParams, RaceView, SubmitTownSearchParams},
-    infrastructure::db::RaceRepository,
+    domain::{
+        google_sheet::GoogleSheet,
+        race::{
+            NewRace, NewRaceResult, RaceSearchParams, RaceView, SubmitTownSearchParams,
+            UpcomingRaceFromRun169Society,
+        },
+    },
+    infrastructure::db::{RaceRepository, TownRepository},
     util::pagination::PaginatedResponse,
 };
 
 pub struct RaceService {
     race_repository: RaceRepository,
+    town_repository: TownRepository,
 }
 
 impl RaceService {
     pub fn new(db: &DbConnection) -> Self {
         Self {
             race_repository: RaceRepository::new(db),
+            town_repository: TownRepository::new(db),
         }
     }
 
@@ -36,5 +44,31 @@ impl RaceService {
         params: RaceSearchParams,
     ) -> PaginatedResponse<RaceView> {
         self.race_repository.search_for_upcoming(params).await
+    }
+
+    pub async fn upcoming_races_nightly(&self) -> Result<(), String> {
+        let races: Vec<UpcomingRaceFromRun169Society> = GoogleSheet::upcoming_races().await?;
+
+        for race in races {
+            let town_id = match self.town_repository.find_by_name(&race.town_name).await {
+                Ok(town) => town.id,
+                Err(_) => continue,
+            };
+
+            let race = NewRace {
+                town_id,
+                name: race.name,
+                start_at: race.start_at,
+                race_url: Some(race.race_url.to_string()),
+                miles: race.miles,
+            };
+
+            match self.race_repository.get_or_create(race).await {
+                Ok(race) => race,
+                Err(_) => continue,
+            };
+        }
+
+        Ok(())
     }
 }

@@ -108,7 +108,9 @@ pub trait Paginatable:
         args: Vec<&str>,
     ) -> Result<PaginatedResponse<Self>, sqlx::Error> {
         let page = pagination.page.unwrap_or(1);
-        let page_size = pagination.page_size.unwrap_or(10);
+        let page_size = pagination
+            .page_size
+            .unwrap_or(Pagination::default().page_size.unwrap());
         let offset = (page - 1) * page_size;
 
         // count total

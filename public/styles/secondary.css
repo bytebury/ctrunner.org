@@ -276,6 +276,26 @@ ol.dropdown button:hover {
 	color: white;
 }
 
+button.heart {
+	color: #ff4d70;
+	border-radius: 100%;
+	padding: 8px;
+}
+
+button.heart:hover {
+	background: #ff4d7010;
+}
+
+button.ticket {
+	color: #ff9717;
+	border-radius: 100%;
+	padding: 8px;
+}
+
+button.ticket:hover {
+	background: #ff971710;
+}
+
 @keyframes fadeIn {
 	0% {
 		opacity: 0;

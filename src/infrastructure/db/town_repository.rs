@@ -20,8 +20,16 @@ impl TownRepository {
     }
 
     pub async fn find_by_id(&self, id: i64) -> Result<Town, String> {
-        query_as("SELECT * FROM towns_view WHERE id = $1")
+        query_as("SELECT * FROM towns_view WHERE id = ?")
             .bind(id)
+            .fetch_one(self.db.as_ref())
+            .await
+            .map_err(|_| "Unable to find that town".to_string())
+    }
+
+    pub async fn find_by_name(&self, name: &str) -> Result<Town, String> {
+        query_as("SELECT * FROM towns_view WHERE name = ?")
+            .bind(name)
             .fetch_one(self.db.as_ref())
             .await
             .map_err(|_| "Unable to find that town".to_string())

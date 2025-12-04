@@ -1,4 +1,5 @@
 pub mod distance;
+pub mod google_sheet;
 pub mod race;
 pub mod rbac;
 pub mod town;

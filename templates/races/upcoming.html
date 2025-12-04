@@ -30,22 +30,27 @@
 							<table>
 								<thead>
 									<tr>
-										<th>Date</th>
-										<th>Town</th>
-										<th>Name</th>
-										<th>Distance</th>
-										<th>Website</th>
+										<th>Race Details</th>
+										<th class="text-right">Website</th>
 										<th></th>
 									</tr>
 								</thead>
 								<tbody>
 									{% for race in races.items %}
 									<tr>
-										<td class="nowrap">{{ race.start_at | daydatetime }}</td>
-										<td class="nowrap">{{ race.town }}</td>
-										<td class="nowrap">{{ race.name | title }}</td>
-										<td class="nowrap">{{ race.miles }} Miles</td>
 										<td class="nowrap">
+											<p><strong>{{ race.name | title }}</strong></p>
+											{{ race.start_at | daydatetime }}
+											<p>
+												<a
+													target="_blank"
+													href="https://www.google.com/maps/place/{{ race.town }},CT"
+													>{{ race.town }}</a
+												>
+												| {{ race.miles }} Miles
+											</p>
+										</td>
+										<td class="nowrap text-right">
 											{% if let Some(website) = race.race_url %}
 											<a target="_blank" href="{{ website }}" class="nowrap"
 												>Visit Race Website</a
@@ -53,11 +58,11 @@
 											{% endif %}
 										</td>
 										<td>
-											<div class="flex items-center">
-												<button
-													class="flex items-center"
-													style="color: #ff4d70"
-												>
+											<div
+												class="flex items-center nowrap gap-1"
+												style="justify-content: end"
+											>
+												<button class="flex items-center heart">
 													<svg
 														xmlns="http://www.w3.org/2000/svg"
 														fill="none"
@@ -74,10 +79,7 @@
 														/>
 													</svg>
 												</button>
-												<button
-													class="flex items-center"
-													style="color: #ff9717"
-												>
+												<button class="flex items-center ticket">
 													<svg
 														xmlns="http://www.w3.org/2000/svg"
 														fill="none"

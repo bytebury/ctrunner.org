@@ -1,11 +1,17 @@
-use crate::util::parse_no_seconds;
-use chrono::NaiveDateTime;
+use std::str::FromStr;
+
+use crate::{
+    domain::google_sheet::GoogleSheet,
+    util::{StringExt, parse_no_seconds},
+};
+use chrono::{NaiveDateTime, Utc};
+use chrono_tz::America::New_York;
 use serde::{Deserialize, Serialize};
 use sqlx::prelude::FromRow;
 
 use crate::{
     domain::{
-        distance::{DistanceUnit, Kilometers, Miles},
+        distance::{DistanceUnit, Miles},
         town::SubmitTown,
     },
     util::pagination::{Paginatable, Pagination},
@@ -85,6 +91,69 @@ pub struct NewRace {
     pub race_url: Option<String>,
 }
 
+#[derive(Debug)]
+pub struct UpcomingRaceFromRun169Society {
+    pub name: String,
+    pub town_name: String,
+    pub miles: Miles,
+    pub start_at: chrono::NaiveDateTime,
+    pub race_url: String,
+}
+
+impl From<GoogleSheet> for Vec<UpcomingRaceFromRun169Society> {
+    fn from(value: GoogleSheet) -> Self {
+        let mut races = Vec::new();
+
+        for row in value.table.rows {
+            let columns: Vec<String> = row
+                .c
+                .unwrap_or_default()
+                .into_iter()
+                .map(|cell| {
+                    cell.and_then(|cell| cell.v)
+                        .map(|v| v.to_string().trim_matches('"').to_string())
+                        .unwrap_or_default()
+                })
+                .collect();
+
+            let start_date = columns[0].clone();
+            let start_time = columns[1].clone();
+            let name = columns[4].clone();
+            let town_name = columns[2].clone();
+            let race_url = columns[7].clone();
+            let is_confirmed = columns[8].clone().is_whitespace_or_empty();
+            // TODO: We can also make this safer.
+            // TODO: it's possible that the miles have many distances separated by commas.
+            let miles = match Miles::from_str(&columns[6]) {
+                Ok(miles) => miles,
+                Err(_) => continue,
+            };
+            let start_at = match GoogleSheet::parse_date_cells(start_date, start_time) {
+                Ok(date) => date,
+                Err(_) => continue,
+            };
+
+            if start_at < Utc::now().with_timezone(&New_York).naive_local() {
+                continue;
+            }
+
+            if !is_confirmed {
+                continue;
+            }
+
+            races.push(UpcomingRaceFromRun169Society {
+                name,
+                town_name,
+                miles,
+                start_at,
+                race_url,
+            });
+        }
+
+        races
+    }
+}
+
 pub struct NewRaceResult {
     pub user_id: i64,
     pub race_id: i64,
@@ -103,14 +172,10 @@ impl NewRaceResult {
 
 impl From<SubmitTown> for NewRace {
     fn from(form: SubmitTown) -> Self {
-        let miles = match form.distance_unit {
-            DistanceUnit::Miles => Miles::new(form.distance_val),
-            DistanceUnit::Kilometers => Kilometers::new(form.distance_val).to_miles(),
-        };
         Self {
             name: form.race_name,
             town_id: form.town_id,
-            miles,
+            miles: Miles::parse(form.distance_val, form.distance_unit),
             start_at: form.start_at,
             race_url: None,
         }
@@ -119,14 +184,10 @@ impl From<SubmitTown> for NewRace {
 
 impl From<NewRaceForm> for NewRace {
     fn from(form: NewRaceForm) -> Self {
-        let miles = match form.distance_unit {
-            DistanceUnit::Miles => Miles::new(form.distance_val),
-            DistanceUnit::Kilometers => Kilometers::new(form.distance_val).to_miles(),
-        };
         Self {
             name: form.name,
             town_id: form.town_id,
-            miles,
+            miles: Miles::parse(form.distance_val, form.distance_unit),
             start_at: form.start_at,
             race_url: Some(form.race_url),
         }

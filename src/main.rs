@@ -1,6 +1,8 @@
+use ctrunner::{application::RaceService, infrastructure::db::Database};
 use dotenv::dotenv;
 use log::info;
-use std::{fs, path::Path};
+use std::{fs, path::Path, sync::Arc};
+use tokio_cron_scheduler::{Job, JobScheduler};
 
 #[tokio::main]
 async fn main() {
@@ -13,7 +15,27 @@ async fn main() {
         copy_assets();
     }
 
+    run_nightly_jobs().await;
+
     ctrunner::start().await;
+}
+
+async fn run_nightly_jobs() {
+    let sched = JobScheduler::new().await.unwrap();
+    let upcoming_races_job = Job::new_async("0 0 6 * * *", |_uuid, _l| {
+        Box::pin(async move {
+            info!("🦉 Gathering upcoming races...");
+            let db = Database::initialize().await;
+            let _ = RaceService::new(&Arc::new(db))
+                .upcoming_races_nightly()
+                .await;
+            info!("Gathered some new races.");
+        })
+    })
+    .unwrap();
+
+    sched.add(upcoming_races_job).await.unwrap();
+    sched.start().await.unwrap();
 }
 
 fn is_dev() -> bool {
