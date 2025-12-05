@@ -118,16 +118,7 @@ impl From<GoogleSheet> for Vec<UpcomingRaceFromRun169Society> {
 
             let start_date = columns[0].clone();
             let start_time = columns[1].clone();
-            let name = columns[4].clone();
-            let town_name = columns[2].clone();
-            let race_url = columns[7].clone();
             let is_confirmed = columns[8].clone().is_whitespace_or_empty();
-            // TODO: We can also make this safer.
-            // TODO: it's possible that the miles have many distances separated by commas.
-            let miles = match Miles::from_str(&columns[6]) {
-                Ok(miles) => miles,
-                Err(_) => continue,
-            };
             let start_at = match GoogleSheet::parse_date_cells(start_date, start_time) {
                 Ok(date) => date,
                 Err(_) => continue,
@@ -141,13 +132,24 @@ impl From<GoogleSheet> for Vec<UpcomingRaceFromRun169Society> {
                 continue;
             }
 
-            races.push(UpcomingRaceFromRun169Society {
-                name,
-                town_name,
-                miles,
-                start_at,
-                race_url,
-            });
+            let miles: Vec<&str> = columns[6].split(',').map(|s| s.trim()).collect();
+            for miles in &miles {
+                let name = columns[4].clone();
+                let town_name = columns[2].clone();
+                let race_url = columns[7].clone();
+                let miles = match Miles::from_str(miles) {
+                    Ok(miles) => miles,
+                    Err(_) => continue,
+                };
+
+                races.push(UpcomingRaceFromRun169Society {
+                    name,
+                    town_name,
+                    miles,
+                    start_at,
+                    race_url,
+                });
+            }
         }
 
         races

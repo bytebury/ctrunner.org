@@ -57,7 +57,7 @@ impl RaceService {
 
             let race = NewRace {
                 town_id,
-                name: race.name,
+                name: race.name.to_string(),
                 start_at: race.start_at,
                 race_url: Some(race.race_url.to_string()),
                 miles: race.miles,
