@@ -25,6 +25,10 @@ impl TownService {
         self.town_repository.find_all().await
     }
 
+    pub async fn find_completed(&self, user_id: i64) -> Vec<Town> {
+        self.town_repository.find_completed(user_id).await
+    }
+
     pub async fn submit_completed_town(&self, user: User, form: SubmitTown) -> Result<(), String> {
         let town_id = form.town_id;
         let town = self.town_repository.find_by_id(town_id).await?;

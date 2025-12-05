@@ -19,6 +19,14 @@ impl TownRepository {
             .unwrap_or_default()
     }
 
+    pub async fn find_completed(&self, user_id: i64) -> Vec<Town> {
+        query_as("SELECT * FROM towns_view WHERE id IN (SELECT town_id FROM completed_towns WHERE user_id = ?)")
+            .bind(user_id)
+            .fetch_all(self.db.as_ref())
+            .await
+            .unwrap_or_default()
+    }
+
     pub async fn find_by_id(&self, id: i64) -> Result<Town, String> {
         query_as("SELECT * FROM towns_view WHERE id = ?")
             .bind(id)

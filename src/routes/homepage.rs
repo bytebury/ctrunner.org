@@ -37,6 +37,7 @@ struct HomepageTemplate {
 #[template(path = "dashboard.html")]
 struct DashboardTemplate {
     shared: SharedContext,
+    completed_towns: Vec<Town>,
 }
 
 #[derive(Template, WebTemplate, Default)]
@@ -56,10 +57,12 @@ async fn homepage(State(state): State<SharedState>, NoUser: NoUser) -> HomepageT
 
 async fn dashboard(
     State(state): State<SharedState>,
-    CurrentUser(current_user): CurrentUser,
+    CurrentUser(user): CurrentUser,
 ) -> DashboardTemplate {
     DashboardTemplate {
-        shared: SharedContext::new(&state.app_info, Some(*current_user)),
+        // TODO: completed towns should be it's own endpoint.
+        shared: SharedContext::new(&state.app_info, Some(*user.clone())),
+        completed_towns: state.town_service.find_completed(user.id).await,
     }
 }
 

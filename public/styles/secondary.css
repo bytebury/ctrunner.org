@@ -148,6 +148,12 @@ img.avatar {
 	border: var(--default-border);
 }
 
+nav#navbar img.avatar {
+	max-width: 32px;
+	max-height: 32px;
+	overflow: hidden;
+}
+
 table {
 	max-width: 100%;
 	width: 100%;
@@ -294,6 +300,34 @@ button.ticket {
 
 button.ticket:hover {
 	background: #ff971710;
+}
+
+svg#map {
+	aspect-ratio: 16/10;
+}
+
+svg#map g#ct_towns path {
+	pointer-events: all;
+}
+
+svg#map g#ct_towns path.completed {
+	fill: #0751cf80 !important;
+}
+
+svg#map g#ct_towns path.completed:hover {
+	fill: #0751cfff !important;
+}
+
+.tooltip {
+	position: absolute;
+	background: rgba(0, 0, 0, 0.85);
+	color: #fff;
+	padding: 4px 8px;
+	border-radius: 4px;
+	font-size: 12px;
+	pointer-events: none;
+	opacity: 0;
+	transition: opacity 0.2s;
 }
 
 @keyframes fadeIn {
