@@ -8,15 +8,30 @@
 	<body>
 		{% include "_partials/navbar.html" %}
 		<main>
+			{% if let Some(user) = shared.current_user %}
 			<div class="container">
-				<div class="card flex-col">
-					{% if let Some(user) = shared.current_user %}
-					<h1>Welcome, {{ user.first_name | title }}!</h1>
+				<div class="card flex-col items-center">
+					<div class="flex-col justify-center items-center">
+						<img
+							class="avatar"
+							src="{{ user.image_url }}"
+							alt="{{ user.full_name }}'s Profile Picture"
+							width="76"
+							height="76"
+						/>
+						<div class="text-center">
+							<h1><strong>{{ user.full_name }}</strong></h1>
+							{% if let Some(hometown) = user.hometown %}
+							<p>{{ hometown }}</p>
+							{% endif %}
+						</div>
+					</div>
 					<div
 						hx-get="/completed-towns-map/{{ user.id }}"
 						hx-trigger="load"
 						hx-swap="outerHTML"
 						hx-indicator=".htmx-indicator"
+						style="width: 100%"
 					></div>
 					<div class="flex gap-2 items-center htmx-indicator">
 						<svg
@@ -43,9 +58,9 @@
 						</svg>
 						Sprinting for your data...
 					</div>
-					{% endif %}
 				</div>
 			</div>
+			{% endif %}
 		</main>
 		{% include "_partials/footer.html" %}
 	</body>

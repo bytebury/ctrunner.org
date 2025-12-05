@@ -24,6 +24,26 @@
 						</button>
 						{% endif %}
 					</div>
+					{% if races.total > 0 %}
+					<h1>Search Races</h1>
+					<form>
+						<div class="form-control">
+							<label for="race_search">Search</label>
+							<input
+								id="race_search"
+								name="race_name"
+								autocomplete="off"
+								placeholder="Search an upcoming race..."
+								hx-select="#upcoming_race_list"
+								hx-target="#upcoming_race_list"
+								hx-trigger="keyup changed delay:200ms"
+								hx-push-url="true"
+								hx-get="/upcoming-races"
+								type="text"
+							/>
+						</div>
+					</form>
+					{% endif %}
 					<div id="upcoming_race_list" class="flex-col gap-2">
 						{% if races.total > 0 %}
 						<div class="table-responsive">
@@ -104,11 +124,50 @@
 							</table>
 						</div>
 						<div class="muted text-right text-sm">
-							{% if races.total == 1 %} {{ races.total }} upcoming race {% else %} {{
-							races.total }} upcoming races {% endif %}
+							Showing <strong>{{ races.start }} - {{ races.end }}</strong> of
+							<strong>{{ races.total }}</strong> upcoming races
 						</div>
 						{% else %}
 						<p>No upcoming races found.</p>
+						{% endif %} {% if races.total > 0 %}
+						<div class="flex justify-between items-center">
+							<button
+								class="btn outline"
+								hx-get="/upcoming-races?page={{ races.page - 1 }}"
+								hx-push-url="true"
+								hx-target="#upcoming_race_list"
+								hx-select="#upcoming_race_list"
+								hx-include="#race_search"
+								{%
+								if
+								!races.has_prev
+								%}
+								disabled
+								{%
+								endif
+								%}
+							>
+								Previous
+							</button>
+							<button
+								class="btn outline"
+								hx-get="/upcoming-races?page={{ races.page + 1 }}"
+								hx-push-url="true"
+								hx-target="#upcoming_race_list"
+								hx-select="#upcoming_race_list"
+								hx-include="#race_search"
+								{%
+								if
+								!races.has_next
+								%}
+								disabled
+								{%
+								endif
+								%}
+							>
+								Next
+							</button>
+						</div>
 						{% endif %}
 					</div>
 				</section>

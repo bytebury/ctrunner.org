@@ -1,10 +1,10 @@
 use crate::SharedState;
-use crate::domain::User;
+use crate::domain::user::UserView;
 use crate::extract::BaseUser;
 use axum::response::{IntoResponse, Redirect, Response};
 use axum::{extract::FromRequestParts, http::request::Parts};
 
-pub struct AdminUser(pub Box<User>);
+pub struct AdminUser(pub Box<UserView>);
 
 impl FromRequestParts<SharedState> for AdminUser {
     type Rejection = Response;

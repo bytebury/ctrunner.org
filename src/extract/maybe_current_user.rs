@@ -1,9 +1,10 @@
 use crate::SharedState;
-use crate::{domain::User, extract::BaseUser};
+use crate::domain::user::UserView;
+use crate::extract::BaseUser;
 use axum::response::{IntoResponse, Redirect, Response};
 use axum::{extract::FromRequestParts, http::request::Parts};
 
-pub struct MaybeCurrentUser(pub Option<Box<User>>);
+pub struct MaybeCurrentUser(pub Option<Box<UserView>>);
 
 impl FromRequestParts<SharedState> for MaybeCurrentUser {
     type Rejection = Response;

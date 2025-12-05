@@ -26,7 +26,7 @@ impl UserService {
         self.user_repository.find_by_runner_id(runner_id).await
     }
 
-    pub async fn find_by_email(&self, email: &str) -> Result<Option<User>, sqlx::Error> {
+    pub async fn find_by_email(&self, email: &str) -> Result<Option<UserView>, sqlx::Error> {
         self.user_repository.find_by_email(email).await
     }
 
@@ -52,7 +52,7 @@ impl UserService {
         self.user_repository.search(pagination, search).await
     }
 
-    pub async fn create(&self, user: &NewUser) -> Result<User, sqlx::Error> {
+    pub async fn create(&self, user: &NewUser) -> Result<UserView, sqlx::Error> {
         self.user_repository.create(user).await
     }
 }

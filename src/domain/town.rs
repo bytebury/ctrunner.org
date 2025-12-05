@@ -1,7 +1,7 @@
-use crate::domain::User;
 use crate::domain::distance::DistanceUnit;
 use crate::domain::distance::Kilometers;
 use crate::domain::distance::Miles;
+use crate::domain::user::UserView;
 use crate::util::parse_no_seconds;
 use chrono::NaiveDateTime;
 use chrono::{Datelike, NaiveDate};
@@ -62,7 +62,7 @@ pub struct Run169TownsSocietyGoogleFormAnswers {
 }
 
 impl Run169TownsSocietyGoogleFormAnswers {
-    pub fn new(user: &User, town: &Town, form: &SubmitTown) -> Self {
+    pub fn new(user: &UserView, town: &Town, form: &SubmitTown) -> Self {
         let distance_val = match form.distance_unit {
             DistanceUnit::Miles => Miles::new(form.distance_val),
             DistanceUnit::Kilometers => Kilometers::new(form.distance_val).to_miles(),
@@ -100,22 +100,29 @@ pub struct Run169TownsSocietyGoogleForm {
 }
 
 impl Run169TownsSocietyGoogleForm {
-    fn new() -> Self {
+    fn from_env() -> Self {
         Self {
-            form_id: "1FAIpQLScHViJvQL0G_ZPuCZOIFNsBPthZwDSzbkgiFFeL93wp831diA".to_string(),
-            member_id: "1858653824".to_string(),
-            action: "517872474".to_string(),
-            first_name: "1421839249".to_string(),
-            last_name: "390953767".to_string(),
-            town_of_race: "1178659240".to_string(),
-            date_of_race_year: "1640631443_year".to_string(),
-            date_of_race_month: "1640631443_month".to_string(),
-            date_of_race_day: "1640631443_day".to_string(),
-            distance: "1543094814".to_string(),
-            name_of_race: "1606581847".to_string(),
-            is_169th_town: "809023255".to_string(),
-            notify_others: "1292315262".to_string(),
-            comment: "1729945787".to_string(),
+            form_id: std::env::var("SUBMIT_FORM_ID").expect("SUBMIT_FORM_ID is missing"),
+            member_id: std::env::var("SUBMIT_MEMBER_ID").expect("SUBMIT_MEMBER_ID is missing"),
+            action: std::env::var("SUBMIT_ACTION").expect("SUBMIT_ACTION is missing"),
+            first_name: std::env::var("SUBMIT_FIRST_NAME").expect("SUBMIT_FIRST_NAME is missing"),
+            last_name: std::env::var("SUBMIT_LAST_NAME").expect("SUBMIT_LAST_NAME is missing"),
+            town_of_race: std::env::var("SUBMIT_TOWN_OF_RACE")
+                .expect("SUBMIT_TOWN_OF_RACE is missing"),
+            date_of_race_year: std::env::var("SUBMIT_DATE_OF_RACE_YEAR")
+                .expect("SUBMIT_DATE_OF_RACE_YEAR is missing"),
+            date_of_race_month: std::env::var("SUBMIT_DATE_OF_RACE_MONTH")
+                .expect("SUBMIT_DATE_OF_RACE_MONTH is missing"),
+            date_of_race_day: std::env::var("SUBMIT_DATE_OF_RACE_DAY")
+                .expect("SUBMIT_DATE_OF_RACE_DAY is missing"),
+            distance: std::env::var("SUBMIT_DISTANCE").expect("SUBMIT_DISTANCE is missing"),
+            name_of_race: std::env::var("SUBMIT_NAME_OF_RACE")
+                .expect("SUBMIT_NAME_OF_RACE is missing"),
+            is_169th_town: std::env::var("SUBMIT_IS_169TH_TOWN")
+                .expect("SUBMIT_IS_169TH_TOWN is missing"),
+            notify_others: std::env::var("SUBMIT_NOTIFY_OTHERS")
+                .expect("SUBMIT_NOTIFY_OTHERS is missing"),
+            comment: std::env::var("SUBMIT_COMMENT").expect("SUBMIT_COMMENT is missing"),
             answers: HashMap::new(),
         }
     }
@@ -123,7 +130,7 @@ impl Run169TownsSocietyGoogleForm {
     pub async fn submit_with_answers(
         answers: Run169TownsSocietyGoogleFormAnswers,
     ) -> Result<(), String> {
-        Self::new().add_answers(answers).submit().await
+        Self::from_env().add_answers(answers).submit().await
     }
 
     fn add_answers(

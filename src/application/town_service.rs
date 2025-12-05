@@ -1,12 +1,13 @@
 use crate::{
     DbConnection,
     domain::{
-        Town, User,
+        Town,
         race::{NewRace, NewRaceResult},
         town::{
             CompletedTown, Run169TownsSocietyGoogleForm, Run169TownsSocietyGoogleFormAnswers,
             SubmitTown,
         },
+        user::UserView,
     },
     infrastructure::db::{RaceRepository, TownRepository},
 };
@@ -32,7 +33,11 @@ impl TownService {
         self.town_repository.find_completed(user_id).await
     }
 
-    pub async fn submit_completed_town(&self, user: User, form: SubmitTown) -> Result<(), String> {
+    pub async fn submit_completed_town(
+        &self,
+        user: UserView,
+        form: SubmitTown,
+    ) -> Result<(), String> {
         let town_id = form.town_id;
         let town = self.town_repository.find_by_id(town_id).await?;
 

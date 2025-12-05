@@ -1,6 +1,6 @@
 use crate::{
     SharedState,
-    domain::User,
+    domain::user::UserView,
     infrastructure::jwt::{JwtService, user_claims::UserClaims},
 };
 use axum::{
@@ -26,7 +26,7 @@ pub mod real_ip;
 
 #[derive(Clone)]
 pub enum BaseUser {
-    User(Box<User>),
+    User(Box<UserView>),
     None,
 }
 

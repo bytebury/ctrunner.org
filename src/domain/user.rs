@@ -70,12 +70,6 @@ pub struct User {
     pub updated_at: NaiveDateTime,
 }
 
-impl User {
-    pub fn is_admin(&self) -> bool {
-        self.role == Role::Admin
-    }
-}
-
 #[derive(Serialize, Deserialize, FromRow, Clone)]
 pub struct UserView {
     pub id: i64,
@@ -95,6 +89,12 @@ pub struct UserView {
     pub locked: bool,
     pub created_at: NaiveDateTime,
     pub updated_at: NaiveDateTime,
+}
+
+impl UserView {
+    pub fn is_admin(&self) -> bool {
+        self.role == Role::Admin
+    }
 }
 
 impl Paginatable for UserView {

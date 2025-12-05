@@ -1,7 +1,7 @@
 use chrono::{Duration, Utc};
 use serde::{Deserialize, Serialize};
 
-use crate::domain::User;
+use crate::domain::user::UserView;
 
 #[derive(Serialize, Deserialize)]
 pub struct UserClaims {
@@ -9,8 +9,8 @@ pub struct UserClaims {
     pub exp: usize,
 }
 
-impl From<User> for UserClaims {
-    fn from(user: User) -> Self {
+impl From<UserView> for UserClaims {
+    fn from(user: UserView) -> Self {
         let exp = Utc::now()
             .checked_add_signed(Duration::days(1))
             .expect("valid timestamp")

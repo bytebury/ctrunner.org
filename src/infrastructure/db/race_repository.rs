@@ -68,11 +68,15 @@ impl RaceRepository {
         &self,
         params: RaceSearchParams,
     ) -> PaginatedResponse<RaceView> {
+        let search_str = &format!(
+            "%{}%",
+            params.race_name.clone().unwrap_or_default().to_lowercase()
+        );
         RaceView::paginate_filter(
             &self.db,
             &Pagination::from(params),
-            Some(r#"start_at >= DateTime('now') ORDER BY start_at ASC"#),
-            vec![],
+            Some(r#"LOWER(name) LIKE ? AND start_at >= DateTime('now') ORDER BY start_at ASC"#),
+            vec![search_str],
         )
         .await
         .unwrap()

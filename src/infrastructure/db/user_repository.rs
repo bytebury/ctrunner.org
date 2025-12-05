@@ -26,8 +26,8 @@ impl UserRepository {
             .await
     }
 
-    pub async fn find_by_email(&self, email: &str) -> Result<Option<User>, sqlx::Error> {
-        query_as(r#"SELECT * FROM users WHERE email = LOWER(?)"#)
+    pub async fn find_by_email(&self, email: &str) -> Result<Option<UserView>, sqlx::Error> {
+        query_as(r#"SELECT * FROM users_view WHERE email = LOWER(?)"#)
             .bind(email)
             .fetch_optional(self.db.as_ref())
             .await
@@ -77,24 +77,31 @@ impl UserRepository {
         .unwrap()
     }
 
-    pub async fn create(&self, user: &NewUser) -> Result<User, sqlx::Error> {
-        query_as(
+    pub async fn create(&self, user: &NewUser) -> Result<UserView, sqlx::Error> {
+        let created = sqlx::query!(
             r#"
-        INSERT INTO users (
-            email, full_name, first_name, last_name, image_url, verified, locked
+            INSERT INTO users (
+                email, full_name, first_name, last_name, image_url, verified, locked
+            )
+            VALUES (LOWER(?), LOWER(?), LOWER(?), LOWER(?), ?, ?, ?)
+            RETURNING id
+            "#,
+            user.email,
+            user.full_name,
+            user.first_name,
+            user.last_name,
+            user.image_url,
+            user.verified,
+            user.locked
         )
-        VALUES (LOWER(?), LOWER(?), LOWER(?), LOWER(?), ?, ?, ?)
-        RETURNING *
-        "#,
-        )
-        .bind(&user.email)
-        .bind(&user.full_name)
-        .bind(&user.first_name)
-        .bind(&user.last_name)
-        .bind(&user.image_url)
-        .bind(user.verified)
-        .bind(user.locked)
         .fetch_one(self.db.as_ref())
-        .await
+        .await?;
+
+        let user_view: UserView = query_as(r#"SELECT * FROM users_view WHERE id = ?"#)
+            .bind(created.id)
+            .fetch_one(self.db.as_ref())
+            .await?;
+
+        Ok(user_view)
     }
 }
