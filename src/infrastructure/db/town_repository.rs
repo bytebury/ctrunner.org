@@ -1,6 +1,7 @@
 use sqlx::query;
 use sqlx::query_as;
 
+use crate::domain::town::CompletedTown;
 use crate::{DbConnection, domain::Town};
 
 pub struct TownRepository {
@@ -19,8 +20,8 @@ impl TownRepository {
             .unwrap_or_default()
     }
 
-    pub async fn find_completed(&self, user_id: i64) -> Vec<Town> {
-        query_as("SELECT * FROM towns_view WHERE id IN (SELECT town_id FROM completed_towns WHERE user_id = ?)")
+    pub async fn find_completed(&self, user_id: i64) -> Vec<CompletedTown> {
+        query_as("SELECT * FROM completed_towns_view WHERE user_id = ?")
             .bind(user_id)
             .fetch_all(self.db.as_ref())
             .await

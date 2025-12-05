@@ -10,7 +10,7 @@ pub fn datetime<T: Display>(s: T, _: &dyn askama::Values) -> askama::Result<Stri
 }
 
 pub fn date<T: Display>(s: T, _: &dyn askama::Values) -> askama::Result<String> {
-    match NaiveDate::parse_from_str(&s.to_string(), "%Y-%m-%d") {
+    match NaiveDate::parse_from_str(&s.to_string(), "%Y-%m-%d %H:%M:%S") {
         Ok(dt) => Ok(dt.format("%B %d, %Y").to_string()),
         Err(_) => Ok("Unknown Date".to_string()),
     }

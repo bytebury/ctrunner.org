@@ -1,5 +1,7 @@
 use crate::domain::Town;
+use crate::domain::town::CompletedTown;
 use crate::domain::user::UpdateRunnerInfo;
+use crate::filters;
 use crate::{
     SharedState,
     domain::rbac::Role,
@@ -7,6 +9,7 @@ use crate::{
 };
 use askama::Template;
 use askama_web::WebTemplate;
+use axum::extract::Path;
 use axum::{
     Form, Router,
     extract::State,
@@ -23,7 +26,7 @@ pub fn routes() -> Router<SharedState> {
     Router::new()
         .route("/", get(homepage))
         .route("/dashboard", get(dashboard))
-        .route("/completed-towns-map", get(completed_towns_map))
+        .route("/completed-towns-map/{user_id}", get(completed_towns_map))
         .route("/update-info", get(update_runner_info_page))
         .route("/update-info", patch(update_runner_info))
 }
@@ -43,7 +46,7 @@ struct DashboardTemplate {
 #[derive(Template, WebTemplate)]
 #[template(path = "completed_towns_map.html")]
 struct CompletedTownsMapTemplate {
-    completed_towns: Vec<Town>,
+    completed_towns: Vec<CompletedTown>,
 }
 
 #[derive(Template, WebTemplate, Default)]
@@ -72,10 +75,10 @@ async fn dashboard(
 
 async fn completed_towns_map(
     State(state): State<SharedState>,
-    CurrentUser(user): CurrentUser,
+    Path(user_id): Path<i64>,
 ) -> CompletedTownsMapTemplate {
     CompletedTownsMapTemplate {
-        completed_towns: state.town_service.find_completed(user.id).await,
+        completed_towns: state.town_service.find_completed(user_id).await,
     }
 }
 

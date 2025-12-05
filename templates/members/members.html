@@ -41,8 +41,12 @@
 									</tr>
 								</thead>
 								<tbody>
-									{% for user in users.items %}
-									<tr>
+									{% for user in users.items %} {% if let Some(runner_id) =
+									user.runner_id %}
+									<tr
+										class="clickable"
+										onclick="goTo('/members/{{ runner_id }}')"
+									>
 										<td>
 											<div class="flex nowrap items-center">
 												<div class="flex-col items-center gap-1">
@@ -105,7 +109,7 @@
 										</td>
 										<td class="text-right">{{ user.completed_towns_count }}</td>
 									</tr>
-									{% endfor %}
+									{% endif %} {% endfor %}
 								</tbody>
 							</table>
 						</div>

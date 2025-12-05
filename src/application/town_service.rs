@@ -3,7 +3,10 @@ use crate::{
     domain::{
         Town, User,
         race::{NewRace, NewRaceResult},
-        town::{Run169TownsSocietyGoogleForm, Run169TownsSocietyGoogleFormAnswers, SubmitTown},
+        town::{
+            CompletedTown, Run169TownsSocietyGoogleForm, Run169TownsSocietyGoogleFormAnswers,
+            SubmitTown,
+        },
     },
     infrastructure::db::{RaceRepository, TownRepository},
 };
@@ -25,7 +28,7 @@ impl TownService {
         self.town_repository.find_all().await
     }
 
-    pub async fn find_completed(&self, user_id: i64) -> Vec<Town> {
+    pub async fn find_completed(&self, user_id: i64) -> Vec<CompletedTown> {
         self.town_repository.find_completed(user_id).await
     }
 

@@ -187,6 +187,10 @@ table caption {
 	color: var(--muted);
 }
 
+table tr.clickable {
+	cursor: pointer;
+}
+
 .card.news {
 	border-style: dashed;
 	padding: 6px;

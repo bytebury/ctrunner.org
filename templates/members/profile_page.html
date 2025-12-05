@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<title>{{ shared.app_info.name }} | {{ user.full_name }}</title>
+		<meta name="description" content="{{ user.first_name | title}}'s Running Map" />
+		{% include "_partials/meta.html" %} {% include "_partials/scripts.html" %}
+	</head>
+	<body>
+		{% include "_partials/navbar.html" %}
+		<main>
+			<div class="container">
+				<div class="card flex-col items-center">
+					<div class="flex-col justify-center items-center">
+						<img
+							class="avatar"
+							src="{{ user.image_url }}"
+							alt="{{ user.full_name }}'s Profile Picture"
+							width="76"
+							height="76"
+						/>
+						<div class="text-center">
+							<h1><strong>{{ user.full_name }}</strong></h1>
+							{% if let Some(hometown) = user.hometown %} {% if let Some(county) =
+							user.hometown_county %}
+							<p class="flex items-center gap-2">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke-width="1.5"
+									stroke="currentColor"
+									width="16"
+									height="16"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+									/>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"
+									/>
+								</svg>
+								{{ hometown }} | {{ county }} County
+							</p>
+							{% endif %} {% endif %}
+						</div>
+					</div>
+					<div
+						hx-get="/completed-towns-map/{{ user.id }}"
+						hx-trigger="load"
+						hx-swap="outerHTML"
+						hx-indicator=".htmx-indicator"
+						style="width: 100%"
+					></div>
+					<div class="flex gap-2 items-center htmx-indicator">
+						<svg
+							class="animate-spin"
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							width="24"
+							height="24"
+						>
+							<circle
+								style="opacity: 0.25"
+								cx="12"
+								cy="12"
+								r="10"
+								stroke="currentColor"
+								stroke-width="4"
+							></circle>
+							<path
+								style="opacity: 0.75"
+								fill="currentColor"
+								d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+							></path>
+						</svg>
+						Sprinting for your data...
+					</div>
+				</div>
+			</div>
+		</main>
+		{% include "_partials/footer.html" %}
+	</body>
+</html>

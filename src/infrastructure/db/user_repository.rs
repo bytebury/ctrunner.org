@@ -19,6 +19,13 @@ impl UserRepository {
             .await
     }
 
+    pub async fn find_by_runner_id(&self, runner_id: i64) -> Result<UserView, sqlx::Error> {
+        query_as(r#"SELECT * FROM users_view WHERE runner_id = ?"#)
+            .bind(runner_id)
+            .fetch_one(self.db.as_ref())
+            .await
+    }
+
     pub async fn find_by_email(&self, email: &str) -> Result<Option<User>, sqlx::Error> {
         query_as(r#"SELECT * FROM users WHERE email = LOWER(?)"#)
             .bind(email)

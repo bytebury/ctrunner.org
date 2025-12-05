@@ -3,7 +3,7 @@ use askama::Template;
 use askama_web::WebTemplate;
 use axum::{
     Router,
-    extract::{Query, State},
+    extract::{Path, Query, State},
     routing::get,
 };
 use serde::Deserialize;
@@ -16,7 +16,9 @@ use crate::{
 };
 
 pub fn routes() -> Router<SharedState> {
-    Router::new().route("/members", get(members))
+    Router::new()
+        .route("/members", get(members))
+        .route("/members/{username}", get(profile_page))
 }
 
 #[derive(Deserialize)]
@@ -31,6 +33,13 @@ struct MemberSearch {
 struct MembersTemplate {
     shared: SharedContext,
     users: PaginatedResponse<UserView>,
+}
+
+#[derive(Template, WebTemplate)]
+#[template(path = "members/profile_page.html")]
+struct ProfilePageTemplate {
+    shared: SharedContext,
+    user: UserView,
 }
 
 async fn members(
@@ -48,5 +57,22 @@ async fn members(
             .user_service
             .search(&pagination, &params.q.unwrap_or_default())
             .await,
+    }
+}
+
+async fn profile_page(
+    State(state): State<SharedState>,
+    MaybeCurrentUser(current_user): MaybeCurrentUser,
+    Path(username): Path<i64>,
+) -> ProfilePageTemplate {
+    // TODO: Handle user not found.
+    let user = state
+        .user_service
+        .find_by_runner_id(username)
+        .await
+        .unwrap();
+    ProfilePageTemplate {
+        shared: SharedContext::new(&state.app_info, current_user.as_deref().cloned()),
+        user,
     }
 }

@@ -13,7 +13,7 @@
 					{% if let Some(user) = shared.current_user %}
 					<h1>Welcome, {{ user.first_name | title }}!</h1>
 					<div
-						hx-get="/completed-towns-map"
+						hx-get="/completed-towns-map/{{ user.id }}"
 						hx-trigger="load"
 						hx-swap="outerHTML"
 						hx-indicator=".htmx-indicator"

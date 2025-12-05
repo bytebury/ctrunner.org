@@ -39,3 +39,7 @@ loadTooltips();
 document.addEventListener("htmx:afterSettle", function () {
 	loadTooltips();
 });
+
+function goTo(url) {
+	window.location.href = url;
+}

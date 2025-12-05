@@ -7,7 +7,7 @@ use chrono::NaiveDateTime;
 use chrono::{Datelike, NaiveDate};
 use serde::{Deserialize, Serialize};
 use sqlx::FromRow;
-use std::{collections::HashMap, fmt};
+use std::collections::HashMap;
 
 #[derive(Debug, Serialize, Deserialize, FromRow)]
 pub struct Town {
@@ -27,10 +27,15 @@ impl Town {
     }
 }
 
-impl fmt::Display for Town {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.name)
-    }
+#[derive(Debug, Serialize, Deserialize, FromRow)]
+pub struct CompletedTown {
+    pub id: i64,
+    pub user_id: i64,
+    pub town_id: i64,
+    pub name: String,
+    pub county: String,
+    pub created_at: NaiveDateTime,
+    pub updated_at: NaiveDateTime,
 }
 
 #[derive(Serialize, Deserialize, Default, Clone)]
