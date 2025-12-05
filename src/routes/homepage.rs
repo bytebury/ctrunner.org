@@ -23,6 +23,7 @@ pub fn routes() -> Router<SharedState> {
     Router::new()
         .route("/", get(homepage))
         .route("/dashboard", get(dashboard))
+        .route("/completed-towns-map", get(completed_towns_map))
         .route("/update-info", get(update_runner_info_page))
         .route("/update-info", patch(update_runner_info))
 }
@@ -37,6 +38,11 @@ struct HomepageTemplate {
 #[template(path = "dashboard.html")]
 struct DashboardTemplate {
     shared: SharedContext,
+}
+
+#[derive(Template, WebTemplate)]
+#[template(path = "completed_towns_map.html")]
+struct CompletedTownsMapTemplate {
     completed_towns: Vec<Town>,
 }
 
@@ -60,8 +66,15 @@ async fn dashboard(
     CurrentUser(user): CurrentUser,
 ) -> DashboardTemplate {
     DashboardTemplate {
-        // TODO: completed towns should be it's own endpoint.
         shared: SharedContext::new(&state.app_info, Some(*user.clone())),
+    }
+}
+
+async fn completed_towns_map(
+    State(state): State<SharedState>,
+    CurrentUser(user): CurrentUser,
+) -> CompletedTownsMapTemplate {
+    CompletedTownsMapTemplate {
         completed_towns: state.town_service.find_completed(user.id).await,
     }
 }

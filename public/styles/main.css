@@ -411,6 +411,10 @@ h2 {
 	line-height: 1.65rem;
 }
 
+.animate-spin {
+	animation: spin 1s linear infinite;
+}
+
 .desktop-only {
 	display: block;
 }
@@ -440,5 +444,15 @@ h2 {
 
 	.mobile-only.inline {
 		display: inline !important;
+	}
+}
+
+@keyframes spin {
+	from {
+		transform: rotate(0deg);
+	}
+
+	to {
+		transform: rotate(360deg);
 	}
 }

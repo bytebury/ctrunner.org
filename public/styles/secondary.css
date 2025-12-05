@@ -324,7 +324,6 @@ svg#map g#ct_towns path.completed:hover {
 	color: #fff;
 	padding: 4px 8px;
 	border-radius: 4px;
-	font-size: 12px;
 	pointer-events: none;
 	opacity: 0;
 	transition: opacity 0.2s;
