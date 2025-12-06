@@ -22,7 +22,7 @@ async fn main() {
 
 async fn run_nightly_jobs() {
     let sched = JobScheduler::new().await.unwrap();
-    let upcoming_races_job = Job::new_async("0 0 6 * * *", |_uuid, _l| {
+    let upcoming_races_job = Job::new_async("0 * * * * *", |_uuid, _l| {
         Box::pin(async move {
             info!("🦉 Gathering upcoming races...");
             let db = Database::initialize().await;

@@ -52,14 +52,21 @@
 									<tr>
 										<th>Race Details</th>
 										<th class="text-right">Website</th>
+										{% if let Some(user) = shared.current_user %}
 										<th></th>
+										{% endif %}
 									</tr>
 								</thead>
 								<tbody>
 									{% for race in races.items %}
 									<tr>
 										<td class="nowrap">
-											<p><strong>{{ race.name | title }}</strong></p>
+											<p class="flex items-center gap-2">
+												<strong>{{ race.name | title }}</strong> {% if
+												race.is_elusive %}
+												<span class="elusive">Elusive</span>
+												{% endif %}
+											</p>
 											{{ race.start_at | daydatetime }}
 											<p>
 												<a
@@ -77,6 +84,7 @@
 											>
 											{% endif %}
 										</td>
+										{% if let Some(user) = shared.current_user %}
 										<td>
 											<div
 												class="flex items-center nowrap gap-1"
@@ -118,6 +126,7 @@
 												</button>
 											</div>
 										</td>
+										{% endif %}
 									</tr>
 									{% endfor %}
 								</tbody>

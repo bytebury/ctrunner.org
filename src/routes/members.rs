@@ -4,6 +4,7 @@ use askama_web::WebTemplate;
 use axum::{
     Router,
     extract::{Path, Query, State},
+    response::{IntoResponse, Redirect},
     routing::get,
 };
 use serde::Deserialize;
@@ -64,15 +65,15 @@ async fn profile_page(
     State(state): State<SharedState>,
     MaybeCurrentUser(current_user): MaybeCurrentUser,
     Path(username): Path<i64>,
-) -> ProfilePageTemplate {
-    // TODO: Handle user not found.
-    let user = state
-        .user_service
-        .find_by_runner_id(username)
-        .await
-        .unwrap();
+) -> impl IntoResponse {
+    let user = match state.user_service.find_by_runner_id(username).await {
+        Ok(user) => user,
+        Err(_) => return Redirect::to("/404").into_response(),
+    };
+
     ProfilePageTemplate {
         shared: SharedContext::new(&state.app_info, current_user.as_deref().cloned()),
         user,
     }
+    .into_response()
 }

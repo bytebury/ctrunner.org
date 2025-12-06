@@ -1,7 +1,7 @@
 CREATE TABLE completed_towns (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER NOT NULL REFERENCES users(id),
-    town_id INTEGER NOT NULL REFERENCES towns(id),
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    town_id INTEGER NOT NULL REFERENCES towns(id) ON DELETE CASCADE,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     UNIQUE(user_id, town_id)
@@ -19,6 +19,6 @@ END;
 
 -- Completed Town View
 CREATE VIEW completed_towns_view AS
-SELECT ct.*, t.name, t.county
+SELECT ct.*, t.name, t.county, t.is_elusive
 FROM completed_towns ct
 LEFT JOIN towns_view t ON t.id = ct.town_id;

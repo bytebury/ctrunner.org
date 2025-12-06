@@ -2,7 +2,7 @@ use crate::DbConnection;
 use crate::domain::user::{UpdateRunnerInfo, UpdateUser, UserView};
 use crate::domain::{User, user::NewUser};
 use crate::util::pagination::{Paginatable, PaginatedResponse, Pagination};
-use sqlx::{query, query_as};
+use sqlx::{query, query_as, query_scalar};
 
 pub struct UserRepository {
     db: DbConnection,
@@ -78,7 +78,7 @@ impl UserRepository {
     }
 
     pub async fn create(&self, user: &NewUser) -> Result<UserView, sqlx::Error> {
-        let created = sqlx::query!(
+        let created_id: i64 = query_scalar(
             r#"
             INSERT INTO users (
                 email, full_name, first_name, last_name, image_url, verified, locked
@@ -86,19 +86,19 @@ impl UserRepository {
             VALUES (LOWER(?), LOWER(?), LOWER(?), LOWER(?), ?, ?, ?)
             RETURNING id
             "#,
-            user.email,
-            user.full_name,
-            user.first_name,
-            user.last_name,
-            user.image_url,
-            user.verified,
-            user.locked
         )
+        .bind(&user.email)
+        .bind(&user.full_name)
+        .bind(&user.first_name)
+        .bind(&user.last_name)
+        .bind(&user.image_url)
+        .bind(user.verified)
+        .bind(user.locked)
         .fetch_one(self.db.as_ref())
         .await?;
 
         let user_view: UserView = query_as(r#"SELECT * FROM users_view WHERE id = ?"#)
-            .bind(created.id)
+            .bind(created_id)
             .fetch_one(self.db.as_ref())
             .await?;
 

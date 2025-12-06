@@ -26,6 +26,7 @@ impl From<UserView> for UpdateUser {
 
 pub struct NewUser {
     pub id: i64,
+    pub runner_id: Option<String>,
     pub email: String,
     pub verified: bool,
     pub first_name: String,
@@ -40,6 +41,7 @@ impl From<GoogleUser> for NewUser {
     fn from(google_user: GoogleUser) -> Self {
         Self {
             id: 0,
+            runner_id: None,
             email: google_user.email,
             verified: google_user.email_verified,
             first_name: google_user.given_name.unwrap_or(google_user.name.clone()),
@@ -109,6 +111,7 @@ pub struct UpdateRunnerInfo {
     pub first_name: String,
     pub last_name: String,
     pub hometown_id: i64,
+    pub towns: Option<Vec<i64>>,
 }
 
 impl Validate for UpdateRunnerInfo {

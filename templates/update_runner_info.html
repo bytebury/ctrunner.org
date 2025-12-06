@@ -89,6 +89,20 @@
 								{% endfor %}
 							</select>
 						</div>
+						<h1 style="margin-bottom: 8px">Select Towns You've Already Ran</h1>
+						<ol class="flex-col gap-2" style="height: 20rem; overflow-y: auto">
+							{% for town in towns %}
+							<li style="border: none">
+								<input
+									type="checkbox"
+									id="town_{{ town.id }}"
+									name="towns"
+									value="{{ town.id }}"
+								/>
+								<label for="town_{{ town.id }}">{{ town.name }}</label>
+							</li>
+							{% endfor %}
+						</ol>
 						<div class="form-actions" style="margin-top: 16px">
 							<button form="update_runner_form" type="submit">
 								Save Information

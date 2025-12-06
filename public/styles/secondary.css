@@ -143,6 +143,15 @@
 	border: var(--default-border);
 }
 
+.elusive {
+	line-height: 1;
+	border: 1px solid var(--accent-color-light);
+	color: var(--accent-color-light);
+	padding: 2px 4px;
+	border-radius: 4px;
+	font-size: 0.8rem;
+}
+
 img.avatar {
 	border-radius: 100%;
 	border: var(--default-border);

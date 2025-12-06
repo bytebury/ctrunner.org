@@ -1,6 +1,6 @@
 CREATE TABLE races (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    town_id INTEGER NOT NULL REFERENCES towns(id),
+    town_id INTEGER NOT NULL REFERENCES towns(id) ON DELETE CASCADE,
     name TEXT NOT NULL,
     miles REAL NOT NULL,
     start_at DATETIME NOT NULL,
@@ -22,6 +22,6 @@ END;
 
 -- Races View
 CREATE VIEW races_view AS
-SELECT r.*, t.name AS town, t.county
+SELECT r.*, t.name AS town, t.county, t.is_elusive
 FROM races r
 LEFT JOIN towns_view t ON t.id = r.town_id;

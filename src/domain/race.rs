@@ -36,6 +36,7 @@ pub struct RaceView {
     pub name: String,
     pub town: String,
     pub county: String,
+    pub is_elusive: bool,
     pub miles: f64,
     pub race_url: Option<String>,
     pub start_at: chrono::NaiveDateTime,

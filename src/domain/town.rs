@@ -15,6 +15,7 @@ pub struct Town {
     pub name: String,
     pub county_id: i64,
     pub county: String,
+    pub is_elusive: bool,
 }
 
 impl Town {
@@ -34,6 +35,7 @@ pub struct CompletedTown {
     pub town_id: i64,
     pub name: String,
     pub county: String,
+    pub is_elusive: bool,
     pub created_at: NaiveDateTime,
     pub updated_at: NaiveDateTime,
 }

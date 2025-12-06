@@ -916,7 +916,13 @@
 		<tbody>
 			{% for town in completed_towns %}
 			<tr>
-				<td>{{ town.name }}</td>
+				<td>
+					<div class="flex items-center gap-2">
+						{{ town.name }} {% if town.is_elusive %}
+						<span class="elusive">Elusive</span>
+						{% endif %}
+					</div>
+				</td>
 				<td class="text-right">{{ town.created_at | date }}</td>
 			</tr>
 			{% endfor %}

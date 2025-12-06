@@ -11,11 +11,12 @@ use askama::Template;
 use askama_web::WebTemplate;
 use axum::extract::Path;
 use axum::{
-    Form, Router,
+    Router,
     extract::State,
     response::IntoResponse,
     routing::{get, patch},
 };
+use axum_extra::extract::Form;
 
 use crate::{
     extract::{CurrentUser, NoUser, OrphanUser},
@@ -29,6 +30,7 @@ pub fn routes() -> Router<SharedState> {
         .route("/completed-towns-map/{user_id}", get(completed_towns_map))
         .route("/update-info", get(update_runner_info_page))
         .route("/update-info", patch(update_runner_info))
+        .route("/404", get(not_found))
 }
 
 #[derive(Template, WebTemplate)]
@@ -40,6 +42,12 @@ struct HomepageTemplate {
 #[derive(Template, WebTemplate)]
 #[template(path = "dashboard.html")]
 struct DashboardTemplate {
+    shared: SharedContext,
+}
+
+#[derive(Template, WebTemplate)]
+#[template(path = "404.html")]
+struct NotFoundTemplate {
     shared: SharedContext,
 }
 
@@ -118,5 +126,11 @@ async fn update_runner_info(
     match state.user_service.update_runner_info(user_id, &form).await {
         Ok(_) => HTMX::redirect("/dashboard").into_response(),
         Err(error) => error_response(&error.to_string(), form),
+    }
+}
+
+async fn not_found(State(state): State<SharedState>) -> NotFoundTemplate {
+    NotFoundTemplate {
+        shared: SharedContext::new(&state.app_info, None),
     }
 }
