@@ -37,6 +37,7 @@ pub fn routes() -> Router<SharedState> {
 #[template(path = "homepage.html")]
 struct HomepageTemplate {
     shared: SharedContext,
+    towns: Vec<Town>,
 }
 
 #[derive(Template, WebTemplate)]
@@ -69,6 +70,7 @@ struct UpdateRunnerInfoTemplate {
 async fn homepage(State(state): State<SharedState>, NoUser: NoUser) -> HomepageTemplate {
     HomepageTemplate {
         shared: SharedContext::new(&state.app_info, None),
+        towns: state.town_service.find_all().await,
     }
 }
 
