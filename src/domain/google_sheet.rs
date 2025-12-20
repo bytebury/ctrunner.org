@@ -84,8 +84,14 @@ impl GoogleSheet {
             .collect::<Result<Vec<_>, _>>()
             .map_err(|_| format!("Invalid number in: {}", input))?;
 
+        if !(0..=11).contains(&nums[1]) {
+            return Err(format!("Invalid month: {}", nums[1]));
+        }
+
+        let month = (nums[1] + 1) as u32;
+
         Ok(match nums.len() {
-            3 => (nums[0], nums[1] as u32, nums[2] as u32, 0, 0, 0),
+            3 => (nums[0], month, nums[2] as u32, 0, 0, 0),
             6 => (
                 nums[0],
                 nums[1] as u32,
